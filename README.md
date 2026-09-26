@@ -13,7 +13,7 @@ AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT,
 [![Tests](https://img.shields.io/github/actions/workflow/status/netarz/netarz-ai-whmcs/tests.yml?branch=main&label=tests&style=flat-square&labelColor=14161f&color=ffc700)](https://github.com/netarz/netarz-ai-whmcs/actions)
 [![Docs](https://img.shields.io/badge/docs-netarz.ir%2Fdocs%2Fai-ffc700?style=flat-square&labelColor=14161f)](https://netarz.ir/docs/ai?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header)
 
-[دانلود آخرین نسخه](https://github.com/netarz/netarz-ai-whmcs/releases/latest) · [ساخت کلید API](https://netarz.ir/ai?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header) · [وب‌سرویس هوش مصنوعی](https://netarz.ir/ai-api?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header) · [English](#english)
+[صفحهٔ معرفی افزونه](https://netarz.ir/ai-api/whmcs?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header) · [دانلود آخرین نسخه](https://github.com/netarz/netarz-ai-whmcs/releases/latest) · [ساخت کلید API](https://netarz.ir/ai?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header) · [وب‌سرویس هوش مصنوعی](https://netarz.ir/ai-api?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=header) · [English](#english)
 
 <img src="docs/screenshots/chat-widget-en.png" alt="پنجرهٔ چت هوش مصنوعی در ناحیهٔ کاربری WHMCS" width="49%"> <img src="docs/screenshots/admin-inbox-fa.png" alt="صندوق چت آنلاین در پنل مدیریت WHMCS، فارسی و راست‌به‌چپ" width="49%">
 
