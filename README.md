@@ -7,7 +7,7 @@
 AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT, Claude, Gemini, DeepSeek). Your NetArz AI credit is shown right in the WHMCS admin.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ffc700?style=flat-square&labelColor=14161f)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-ffc700?style=flat-square&labelColor=14161f)](https://github.com/netarz/netarz-ai-whmcs/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-ffc700?style=flat-square&labelColor=14161f)](https://github.com/netarz/netarz-ai-whmcs/releases)
 [![WHMCS](https://img.shields.io/badge/WHMCS-8.0%2B-ffc700?style=flat-square&labelColor=14161f)](#requirements)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-ffc700?style=flat-square&labelColor=14161f&logo=php&logoColor=white)](#requirements)
 [![Tests](https://img.shields.io/github/actions/workflow/status/netarz/netarz-ai-whmcs/tests.yml?branch=main&label=tests&style=flat-square&labelColor=14161f&color=ffc700)](https://github.com/netarz/netarz-ai-whmcs/actions)
@@ -73,7 +73,7 @@ AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT,
 
 ## نصب در پنج قدم
 
-1. فایل `netarz-ai-whmcs-1.0.0.zip` را از [صفحهٔ نسخه‌ها (Releases)](https://github.com/netarz/netarz-ai-whmcs/releases/latest) دانلود کنید و پوشهٔ
+1. فایل `netarz-ai-whmcs-1.0.1.zip` را از [صفحهٔ نسخه‌ها (Releases)](https://github.com/netarz/netarz-ai-whmcs/releases/latest) دانلود کنید و پوشهٔ
    `modules/addons/netarz_ai` را در همان مسیرِ نصب WHMCS خودتان بارگذاری کنید.
 2. در پنل مدیریت WHMCS به **System Settings ← Addon Modules** بروید، «NetArz AI» را فعال کنید و به نقش‌های مدیریتیِ لازم
    دسترسی بدهید.
@@ -168,7 +168,7 @@ AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT,
 
 ```bash
 composer install
-composer test            # 140 آزمون واحد و یکپارچگی روی یک WHMCS شبیه‌سازی‌شده (SQLite)
+composer test            # 141 آزمون واحد و یکپارچگی روی یک WHMCS شبیه‌سازی‌شده (SQLite)
 composer test:live       # بررسی اتصال به API واقعی نِت اَرز (با NETARZ_API_KEY، یک درخواست پولی بسیار کوچک هم)
 node tests/e2e/run.cjs   # ۵۰ بررسی در مرورگر واقعی: ویجت، صندوق چت، پنل تیکت، تنظیمات، موبایل فارسی
 EVAL_API_KEY=sk-ntz-v1-… php tests/eval/run.php   # ۱۵ سناریوی واقعی مشتری با مدل واقعی
@@ -221,7 +221,7 @@ It runs on the [NetArz AI API](https://netarz.ir/ai-api?utm_source=github&utm_me
 
 ### Install
 
-1. Download `netarz-ai-whmcs-1.0.0.zip` from [Releases](https://github.com/netarz/netarz-ai-whmcs/releases/latest) and upload
+1. Download `netarz-ai-whmcs-1.0.1.zip` from [Releases](https://github.com/netarz/netarz-ai-whmcs/releases/latest) and upload
    `modules/addons/netarz_ai` into your WHMCS installation.
 2. **System Settings → Addon Modules**: activate *NetArz AI* and grant access to the admin roles that need it.
 3. Create an API key (`sk-ntz-v1-…`) in the [NetArz AI panel](https://netarz.ir/ai?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=english) and add credit.
@@ -248,7 +248,7 @@ The ticket mode starts as **drafts for staff**: nothing reaches a customer unsee
 
 ### Tests
 
-`composer test` runs 140 unit and integration tests against a WHMCS stand-in (WHMCS's own Illuminate Capsule on SQLite, the
+`composer test` runs 141 unit and integration tests against a WHMCS stand-in (WHMCS's own Illuminate Capsule on SQLite, the
 WHMCS tables the module reads, and a `localAPI` that fires the same hooks WHMCS fires). `node tests/e2e/run.cjs` drives the widget,
 the staff inbox, the ticket panel and the settings in headless Chrome (50 checks). `tests/eval/run.php` runs 15 real customer
 scenarios against a real model. WHMCS itself is commercial software and is not part of this repository.

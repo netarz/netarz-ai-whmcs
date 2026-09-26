@@ -16,7 +16,7 @@
                     <small class="ntz-error-text"><?= $e($balance['error'] ?? '') ?></small>
                 <?php endif; ?>
             </div>
-            <a class="ntz-btn is-primary is-sm" href="<?= $e(Balance::TOPUP_URL) ?>" target="_blank" rel="noopener"><?= $icon('circle-dollar-sign', 14) ?> <?= $t('dash_topup') ?></a>
+            <a class="ntz-btn is-primary is-sm" href="<?= $e(Balance::topupUrl('home-widget')) ?>" target="_blank" rel="noopener"><?= $icon('circle-dollar-sign', 14) ?> <?= $t('dash_topup') ?></a>
         </div>
         <div class="ntz-widget-stats">
             <div><strong>$<?= number_format($today['cost'], 4) ?></strong><small><?= $t('dash_today') ?><?= $budget > 0 ? ' / $'.number_format($budget, 2) : '' ?></small></div>

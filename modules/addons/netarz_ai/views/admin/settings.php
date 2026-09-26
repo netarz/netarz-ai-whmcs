@@ -58,7 +58,7 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
                     <input class="ntz-input" type="password" id="ntz-api_key" name="api_key" value="<?= $e($maskedKey) ?>" placeholder="sk-ntz-v1-…" dir="ltr" autocomplete="new-password" spellcheck="false">
                     <button type="button" class="ntz-btn" data-action="test-connection"><?= $icon('shield-check', 15) ?> <?= $t('f_test') ?></button>
                 </div>
-                <small class="ntz-hint"><?= $t('f_api_key_hint') ?> <a href="https://netarz.ir/ai" target="_blank" rel="noopener">netarz.ir/ai</a></small>
+                <small class="ntz-hint"><?= $t('f_api_key_hint') ?> <a href="<?= $e(\NetArz\WhmcsAi\Links::to('/ai', 'settings-key')) ?>" target="_blank" rel="noopener">netarz.ir/ai</a></small>
                 <div class="ntz-test-result" data-test-result hidden></div>
             </div>
             <div class="ntz-grid ntz-grid-2 is-flat">

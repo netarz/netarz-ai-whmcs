@@ -153,7 +153,7 @@ final class AgentAndBalanceTest extends TestCase
         $this->assertNull(Balance::alertIfLow(), 'not twice on the same day');
         $this->assertCount(1, FakeWhmcs::$adminEmails);
         $this->assertStringContainsString('$1.50', FakeWhmcs::$adminEmails[0]['custommessage']);
-        $this->assertStringContainsString('netarz.ir/ai/topup', FakeWhmcs::$adminEmails[0]['custommessage']);
+        $this->assertStringContainsString('netarz.ir/ai/topup?utm_source=whmcs-plugin&amp;utm_medium=email', FakeWhmcs::$adminEmails[0]['custommessage']);
     }
 
     public function test_no_alert_while_credit_is_healthy(): void
@@ -231,5 +231,16 @@ final class AgentAndBalanceTest extends TestCase
         FakeGateway::$chatQueue[] = FakeGateway::answer('answer', 'Please change your password now: https://my.parshost.test/password/reset', 80);
         $r = Agent::reply('chat', [['role' => 'user', 'content' => 'my password is Hunter2Secret! help']]);
         $this->assertStringNotContainsString('For your security', $r->reply, 'not added twice');
+    }
+
+    public function test_links_back_to_netarz_are_tagged_for_attribution(): void
+    {
+        $this->assertSame('https://netarz.ir/ai?utm_source=whmcs-plugin&utm_medium=admin&utm_campaign=netarz-ai-whmcs&utm_content=footer-panel', \NetArz\WhmcsAi\Links::to('/ai', 'footer-panel'));
+        $this->connect();
+        $this->loginAdmin(1);
+        $_GET = ['tab' => 'dashboard'];
+        $html = (new \NetArz\WhmcsAi\Admin\Controller('addonmodules.php?module=netarz_ai'))->render();
+        $this->assertStringContainsString('ai/topup?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=dashboard', $html);
+        $this->assertDoesNotMatchRegularExpression('#href="https://netarz\.ir/[^"?]*"#', $html, 'every link back to netarz.ir carries UTM tags');
     }
 }

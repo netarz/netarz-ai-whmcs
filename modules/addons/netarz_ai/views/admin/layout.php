@@ -43,7 +43,7 @@ $tabs = [
                 <h3><?= $t('setup_title') ?></h3>
                 <p><?= $t('setup_text') ?></p>
                 <div class="ntz-row">
-                    <a class="ntz-btn is-primary" href="https://netarz.ir/ai" target="_blank" rel="noopener"><?= $icon('arrow-up-right', 16) ?> <?= $t('setup_get_key') ?></a>
+                    <a class="ntz-btn is-primary" href="<?= $e(\NetArz\WhmcsAi\Links::to('/ai', 'setup-banner')) ?>" target="_blank" rel="noopener"><?= $icon('arrow-up-right', 16) ?> <?= $t('setup_get_key') ?></a>
                     <a class="ntz-btn" href="<?= $e($link) ?>&amp;tab=settings"><?= $icon('settings', 16) ?> <?= $t('setup_open_settings') ?></a>
                 </div>
             </div>
@@ -56,9 +56,9 @@ $tabs = [
 
     <footer class="ntz-foot">
         <span>NetArz AI for WHMCS v<?= \NetArz\WhmcsAi\Schema::VERSION ?></span>
-        <a href="https://netarz.ir/docs/ai" target="_blank" rel="noopener"><?= $t('foot_docs') ?></a>
+        <a href="<?= $e(\NetArz\WhmcsAi\Links::to('/docs/ai', 'footer-docs')) ?>" target="_blank" rel="noopener"><?= $t('foot_docs') ?></a>
         <a href="https://github.com/netarz/netarz-ai-whmcs" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://netarz.ir/ai" target="_blank" rel="noopener"><?= $t('foot_panel') ?></a>
+        <a href="<?= $e(\NetArz\WhmcsAi\Links::to('/ai', 'footer-panel')) ?>" target="_blank" rel="noopener"><?= $t('foot_panel') ?></a>
     </footer>
 </div>
 <script src="<?= $e(View::asset('admin.js')) ?>" defer></script>
