@@ -2,7 +2,7 @@
 
 # افزونهٔ هوش مصنوعی WHMCS نِت اَرز (NetArz AI for WHMCS)
 
-**چت آنلاین و پاسخ تیکت با هوش مصنوعی، داخل WHMCS خودتان؛ با اعتبار هوش مصنوعی نِت اَرز.**
+**دستیار پشتیبانی هوش مصنوعی برای WHMCS: گفتگو با مشتری در ناحیهٔ کاربری، پیش‌نویس یا پاسخ تیکت، و سپردن کار به همکاران شما.**
 
 AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT, Claude, Gemini, DeepSeek). Your NetArz AI credit is shown right in the WHMCS admin.
 
