@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 — 2026-09-27
+
+- The chat header under the assistant's name now says «دستیار هوش مصنوعی» / "AI assistant" instead of promising a reply time.
+
 ## 1.0.1 — 2026-09-27
 
 - Links from the WHMCS admin back to netarz.ir (key, top-up, docs, panel, low-credit email) carry

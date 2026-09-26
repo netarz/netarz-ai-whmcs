@@ -21,7 +21,9 @@ const CHROME = process.env.CHROME_PATH || findChrome();
 const puppeteer = require(process.env.PUPPETEER_PATH || 'puppeteer-core');
 const WHMCS_PORT = 8791;
 const GW_PORT = 8792;
-const WHMCS = `http://127.0.0.1:${WHMCS_PORT}`;
+// The browser sees a realistic client-area host (mapped to the local server), so screenshots show real-looking links.
+const WHMCS = 'http://my.parshost.test';
+const LOCAL = `http://127.0.0.1:${WHMCS_PORT}`;
 const GW = `http://127.0.0.1:${GW_PORT}`;
 const SHOTS = process.env.NTZ_E2E_SHOTS || path.join(__dirname, 'shots');
 const DB = path.join(os.tmpdir(), `netarz-ai-whmcs-e2e-${process.pid}.sqlite`);
@@ -81,6 +83,7 @@ async function waitFor(fn, timeout = 15000, every = 200) {
 
 async function shot(page, name) {
   fs.mkdirSync(SHOTS, { recursive: true });
+  await sleep(700); // let entrance animations finish, or bubbles come out half-faded
   await page.screenshot({ path: path.join(SHOTS, name + '.png') });
 }
 
@@ -94,7 +97,7 @@ async function shot(page, name) {
   const browser = await puppeteer.launch({
     executablePath: CHROME,
     headless: true,
-    args: ['--no-sandbox', '--disable-dev-shm-usage', '--lang=en-US'],
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--lang=en-US', `--host-resolver-rules=MAP my.parshost.test:80 127.0.0.1:${WHMCS_PORT}`],
   });
 
   const jsErrors = [];
@@ -138,7 +141,7 @@ async function shot(page, name) {
     check('the typing indicator shows while the AI works', !!typingSeen);
     await v.waitForSelector('.ntzc-msg.is-ai', { timeout: 15000 });
     const aiText = await v.$eval('.ntzc-msg.is-ai .ntzc-bubble', (e) => e.textContent);
-    check('the AI answers from the WHMCS product catalogue', aiText.includes('$5 monthly'), aiText);
+    check('the AI answers from the WHMCS product catalogue', aiText.includes('$5 a month') && aiText.includes('cart.php?a=add&pid=1'), aiText);
     await sleep(2500);
     check('two quick lines get exactly one answer', (await v.$$('.ntzc-msg.is-ai')).length === 1);
     const completions = gatewayLog().filter((r) => r.path === '/api/ai/v1/chat/completions');
@@ -207,7 +210,7 @@ async function shot(page, name) {
     await v.type('.ntzc-textarea', 'refund please, again');
     await v.keyboard.press('Enter');
     await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 4, { timeout: 15000 });
-    await (await fetch(WHMCS + '/_age')).text();
+    await (await fetch(LOCAL + '/_age')).text();
     const offer = await waitFor(() => v.$eval('.ntzc-offer', (e) => !e.hidden), 8000);
     check('nobody answered in time, so the visitor is offered a ticket', !!offer);
     await shot(v, '06-ticket-offer');
@@ -218,7 +221,7 @@ async function shot(page, name) {
 
     /* ------------------------------------------------------------- tickets */
     console.log('\nTickets (draft mode)');
-    const t = await (await fetch(WHMCS + '/_ticket?client=1&dept=2&subject=' + encodeURIComponent('DNS setup') + '&message=' + encodeURIComponent('Which nameservers should I use for rezashop.test?'))).json();
+    const t = await (await fetch(LOCAL + '/_ticket?client=1&dept=2&subject=' + encodeURIComponent('DNS setup') + '&message=' + encodeURIComponent('Which nameservers should I use for rezashop.test?'))).json();
     await a.goto(WHMCS + '/admin/supporttickets.php?id=' + t.id, { waitUntil: 'networkidle0' });
     const draftShown = await a.$eval('[data-tp-draft]', (e) => !e.hidden);
     check('a new ticket gets an AI draft on the ticket page', draftShown);
@@ -242,10 +245,10 @@ async function shot(page, name) {
     check('the model list is loaded from the gateway', models >= 2);
     await shot(a, '08-settings-en');
     await a.$eval('#ntz-agent_name', (e) => { e.value = ''; });
-    await a.type('#ntz-agent_name', 'Nika');
+    await a.type('#ntz-agent_name', 'نیکا');
     await Promise.all([a.waitForNavigation({ waitUntil: 'networkidle0' }), a.click('.ntz-savebar button')]);
     check('settings save', (await a.$eval('.ntz-flash', (e) => e.textContent)).includes('Settings saved'));
-    check('the saved value is kept', (await a.$eval('#ntz-agent_name', (e) => e.value)) === 'Nika');
+    check('the saved value is kept', (await a.$eval('#ntz-agent_name', (e) => e.value)) === 'نیکا');
 
     await a.goto(WHMCS + '/admin/addonmodules.php?module=netarz_ai&tab=knowledge', { waitUntil: 'networkidle0' });
     await a.type('[data-console-form] textarea', 'What are your support hours?');
@@ -278,7 +281,7 @@ async function shot(page, name) {
     await p.type('.ntzc-textarea', 'قیمت پلن Starter چنده؟');
     await p.keyboard.press('Enter');
     await p.waitForSelector('.ntzc-msg.is-ai', { timeout: 15000 });
-    check('a Persian question gets a Persian answer with the price', /پلن Starter.*\$5 monthly/.test(await p.$eval('.ntzc-msg.is-ai .ntzc-bubble', (e) => e.textContent)));
+    check('a Persian question gets a Persian answer with the price', /پلن Starter ماهی ۵ دلاره.*cart\.php\?a=add&pid=1/.test(await p.$eval('.ntzc-msg.is-ai .ntzc-bubble', (e) => e.textContent)));
     const lastCall = gatewayLog().filter((r) => r.path === '/api/ai/v1/chat/completions').pop();
     check('the signed-in client\'s own services reach the model', lastCall.body.messages[0].content.includes('rezashop.test'));
     check('their hosting password never does', !lastCall.body.messages[0].content.includes('P@ssw0rd-SECRET'));

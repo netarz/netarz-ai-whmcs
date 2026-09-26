@@ -63,8 +63,11 @@ if ($path === '/api/ai/v1/chat/completions') {
     if (preg_match('/refund|money back|بازگشت|پول/iu', $last)) {
         $answer = ['action' => 'handoff', 'confidence' => 35, 'intent' => 'complaint', 'handoff_reason' => 'refund request',
             'reply' => $fa ? 'متأسفم که این‌طور شد. پیامتون رو به همکارم دادم و همین‌جا جواب می‌ده.' : 'I am sorry about that. I have passed this to a colleague, who will reply here.'];
-    } elseif (preg_match('/(Shared Hosting › Starter — [^|\n]+)/u', $system, $m) && preg_match('/starter|price|cost|much|قیمت|هزینه|چند/iu', $last)) {
-        $answer['reply'] = $fa ? 'پلن Starter: '.trim($m[1]).'. برای سفارش از فرم سفارش اقدام کنید.' : 'Our '.trim($m[1]).'.';
+    } elseif (preg_match('/Shared Hosting › Starter — \$(\d+) monthly, \$(\d+) annually[^\n]*order: (\S+)/u', $system, $m) && preg_match('/starter|price|cost|much|قیمت|هزینه|چند/iu', $last)) {
+        $faNum = function ($n) { return strtr($n, ['0' => '۰', '1' => '۱', '2' => '۲', '3' => '۳', '4' => '۴', '5' => '۵', '6' => '۶', '7' => '۷', '8' => '۸', '9' => '۹']); };
+        $answer['reply'] = $fa
+            ? 'پلن Starter ماهی '.$faNum($m[1]).' دلاره و سالانه '.$faNum($m[2]).' دلار. از این لینک می‌تونید سفارشش بدید: '.$m[3]
+            : 'Our Shared Hosting Starter plan is $'.$m[1].' a month or $'.$m[2].' a year. You can order it here: '.$m[3];
     } elseif (preg_match('/nameserver|نیم ?سرور|dns/iu', $last) && preg_match('/(ns1\.[a-z.]+)/', $system, $m)) {
         $answer['reply'] = $fa ? 'نیم‌سرورها را روی '.$m[1].' بگذارید.' : 'Please point your domain to '.$m[1].' and ns2.';
     } elseif (preg_match('/Support hours: ([^\n]+)/', $system, $m) && preg_match('/hour|open|ساعت/iu', $last)) {
