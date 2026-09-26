@@ -149,17 +149,10 @@ async function shot(page, name) {
     check('JSON mode was requested', completions[0] && completions[0].body.response_format && completions[0].body.response_format.type === 'json_object');
     await shot(v, '02-guest-answer');
 
-    // HTML typed by a visitor is shown as text.
-    await v.type('.ntzc-textarea', '<img src=x onerror=alert(1)> test');
-    await v.keyboard.press('Enter');
-    await v.waitForFunction(() => [...document.querySelectorAll('.ntzc-msg.is-visitor .ntzc-bubble')].some((b) => b.textContent.includes('<img src=x')));
-    check('visitor HTML is rendered as text, not markup', (await v.$$('.ntzc-bubble img')).length === 0 && dialogs.length === 0);
-    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 2, { timeout: 15000 });
-
     // A refund request goes to a person.
     await v.type('.ntzc-textarea', 'I want a refund, the site was down all week');
     await v.keyboard.press('Enter');
-    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 3, { timeout: 15000 });
+    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 2, { timeout: 15000 });
     await waitFor(() => v.$eval('.ntzc-status', (e) => e.textContent.includes('colleague')), 8000);
     check('a refund request is handed to a person', (await v.$eval('.ntzc-status', (e) => e.textContent)).includes('colleague'));
 
@@ -181,8 +174,8 @@ async function shot(page, name) {
     await a.waitForSelector('.ntz-thread');
     check('the conversation is in the inbox', (await a.$eval('.ntz-thread', (e) => e.textContent)).includes('Ali Test'));
     await a.click('.ntz-thread');
-    await a.waitForFunction(() => document.querySelectorAll('.ntz-messages .ntz-msg').length >= 6, { timeout: 8000 });
-    check('staff see the whole transcript', (await a.$$('.ntz-messages .ntz-msg')).length >= 6);
+    await a.waitForFunction(() => document.querySelectorAll('.ntz-messages .ntz-msg').length >= 4, { timeout: 8000 });
+    check('staff see the whole transcript', (await a.$$('.ntz-messages .ntz-msg')).length >= 4);
     check('staff see why it was handed over', (await a.$eval('[data-convo-handoff]', (e) => !e.hidden && e.textContent.includes('refund request'))));
     await shot(a, '04-admin-inbox-fa');
 
@@ -206,14 +199,14 @@ async function shot(page, name) {
     await sleep(600);
     await v.type('.ntzc-textarea', 'What are your support hours?');
     await v.keyboard.press('Enter');
-    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 4, { timeout: 15000 });
+    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 3, { timeout: 15000 });
     check('after hand-back the AI answers from the owner notes', (await v.$$eval('.ntzc-msg.is-ai .ntzc-bubble', (els) => els.pop().textContent)).includes('Saturday to Wednesday'));
 
     /* --------------------------------------------- ticket offer when no one comes */
     console.log('\nChat to ticket');
     await v.type('.ntzc-textarea', 'refund please, again');
     await v.keyboard.press('Enter');
-    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 5, { timeout: 15000 });
+    await v.waitForFunction(() => document.querySelectorAll('.ntzc-msg.is-ai').length >= 4, { timeout: 15000 });
     await (await fetch(WHMCS + '/_age')).text();
     const offer = await waitFor(() => v.$eval('.ntzc-offer', (e) => !e.hidden), 8000);
     check('nobody answered in time, so the visitor is offered a ticket', !!offer);
@@ -295,6 +288,15 @@ async function shot(page, name) {
     await p.reload({ waitUntil: 'networkidle0' });
     await p.waitForSelector('.ntzc-msg.is-ai', { timeout: 8000 });
     check('a reload restores the conversation', (await p.$$('.ntzc-msg')).length >= 2);
+
+    /* ---------------------------------------------------- hostile input */
+    console.log('\nHostile input');
+    // HTML typed by a visitor is shown as text.
+    await v.type('.ntzc-textarea', '<img src=x onerror=alert(1)> test');
+    await v.keyboard.press('Enter');
+    await v.waitForFunction(() => [...document.querySelectorAll('.ntzc-msg.is-visitor .ntzc-bubble')].some((b) => b.textContent.includes('<img src=x')));
+    check('visitor HTML is rendered as text, not markup', (await v.$$('.ntzc-bubble img')).length === 0 && dialogs.length === 0);
+
 
     /* ------------------------------------------------------------ hygiene */
     console.log('\nHygiene');
