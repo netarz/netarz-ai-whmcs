@@ -19,7 +19,7 @@ $mode = (string) Settings::get('ticket_mode');
         <?php if ($balance && $balance['ok']): ?>
             <div class="ntz-big" data-balance-usd><?= $e($balance['usd_display'] ?: '$'.number_format($balance['usd'], 2)) ?></div>
             <div class="ntz-muted" data-balance-toman><?= $t('dash_toman', ['amount' => \NetArz\WhmcsAi\Lang::digits(number_format($balance['toman']))]) ?></div>
-            <a class="ntz-btn is-primary is-sm" href="<?= $e(Balance::TOPUP_URL) ?>" target="_blank" rel="noopener"><?= $icon('circle-dollar-sign', 15) ?> <?= $t('dash_topup') ?></a>
+            <a class="ntz-btn is-primary is-sm" href="<?= $e(Balance::topupUrl('dashboard')) ?>" target="_blank" rel="noopener"><?= $icon('circle-dollar-sign', 15) ?> <?= $t('dash_topup') ?></a>
         <?php elseif ($balance): ?>
             <div class="ntz-big is-error">—</div>
             <div class="ntz-error-text"><?= $e($balance['error']) ?></div>

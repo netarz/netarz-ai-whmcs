@@ -25,14 +25,14 @@ function netarz_ai_config()
     return [
         'name' => 'NetArz AI',
         'description' => 'AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT, Claude, Gemini, DeepSeek). Shows your NetArz AI credit on the dashboard. | چت آنلاین و پاسخ تیکت با هوش مصنوعی، با اعتبار وب‌سرویس هوش مصنوعی نِت اَرز.',
-        'author' => '<a href="https://netarz.ir/ai-api" target="_blank" rel="noopener">NetArz</a>',
+        'author' => '<a href="https://netarz.ir/ai-api?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=addon-list" target="_blank" rel="noopener">NetArz</a>',
         'language' => 'english',
         'version' => Schema::VERSION,
         'fields' => [
             'note' => [
                 'FriendlyName' => 'Setup',
                 'Type' => '',
-                'Description' => 'Open Addons → NetArz AI → Settings to enter your API key. Get a key at <a href="https://netarz.ir/ai" target="_blank" rel="noopener">netarz.ir/ai</a>.',
+                'Description' => 'Open Addons → NetArz AI → Settings to enter your API key. Get a key at <a href="https://netarz.ir/ai?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=addon-config" target="_blank" rel="noopener">netarz.ir/ai</a>.',
             ],
         ],
     ];

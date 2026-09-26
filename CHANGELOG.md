@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 — 2026-09-27
+
+- Links from the WHMCS admin back to netarz.ir (key, top-up, docs, panel, low-credit email) carry
+  `utm_source=whmcs-plugin` tags, so NetArz can see which sign-ups and top-ups come from installs.
+- Test suite: the hostile-input browser check runs last, keeping documentation screenshots clean.
+
 ## 1.0.0 — 2026-09-27
 
 First public release.

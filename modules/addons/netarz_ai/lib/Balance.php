@@ -8,9 +8,15 @@ namespace NetArz\WhmcsAi;
  */
 class Balance
 {
-    public const TOPUP_URL = 'https://netarz.ir/ai/topup';
+    public static function topupUrl(string $content = 'topup', string $medium = 'admin'): string
+    {
+        return Links::to('/ai/topup', $content, $medium);
+    }
 
-    public const PANEL_URL = 'https://netarz.ir/ai';
+    public static function panelUrl(string $content = 'panel', string $medium = 'admin'): string
+    {
+        return Links::to('/ai', $content, $medium);
+    }
 
     /**
      * @return array{ok:bool, usd:float, usd_display:string, toman:int, status:string, project:string, key:string, rpm:int, error:string, code:string, checked_at:int}
@@ -86,8 +92,8 @@ class Balance
 
         $subject = Lang::get('alert_subject');
         $body = $low
-            ? Lang::get('alert_low_body', ['balance' => $balance['usd_display'], 'min' => '$'.number_format((float) Settings::get('min_balance'), 2), 'url' => self::TOPUP_URL])
-            : Lang::get('alert_broken_body', ['error' => $balance['error'], 'url' => self::PANEL_URL]);
+            ? Lang::get('alert_low_body', ['balance' => $balance['usd_display'], 'min' => '$'.number_format((float) Settings::get('min_balance'), 2), 'url' => self::topupUrl('low-balance-email', 'email')])
+            : Lang::get('alert_broken_body', ['error' => $balance['error'], 'url' => self::panelUrl('key-error-email', 'email')]);
 
         Whmcs::api('SendAdminEmail', ['customsubject' => $subject, 'custommessage' => nl2br(Text::e($body)), 'type' => 'system']);
         Whmcs::log($subject.' — '.$body);

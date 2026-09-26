@@ -8,7 +8,7 @@ use WHMCS\Database\Capsule;
 /** Creates, upgrades and drops the module's tables. Every table is prefixed mod_netarz_ai_. */
 class Schema
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.0.1';
 
     public const TABLES = [
         'mod_netarz_ai_settings',
