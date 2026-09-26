@@ -1,0 +1,9 @@
+/vendor/
+/node_modules/
+/build/
+/.phpunit.cache/
+/tests/e2e/shots/
+composer.lock
+package-lock.json
+*.sqlite
+.DS_Store
