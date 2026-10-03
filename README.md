@@ -87,7 +87,13 @@ AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT,
 
 <a id="requirements"></a>
 
-**نیازمندی‌ها:** WHMCS 8.0 یا بالاتر، PHP 7.4 یا بالاتر با افزونه‌های curl، json و mbstring، و دسترسی سرور به `https://netarz.ir`.
+**نیازمندی‌ها:** WHMCS 8.0 یا بالاتر، PHP 7.4 یا بالاتر با افزونه‌های curl، json و mbstring، و دسترسی سرور به `https://netarz.ir`
+(یا `https://gisoo.pro` اگر نشانی گیسو را گذاشته‌اید).
+
+**با کلید گیسو:** اگر در [گیسو](https://gisoo.pro/?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=install)، برند هوش مصنوعی نِت اَرز، حساب دارید، کلید `sk-gisoo-v1-…` را از
+[بخش API اپ گیسو](https://gisoo.pro/app/api?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=install) بسازید و در قدم ۴ بگذارید. حساب و اعتبار هوش مصنوعی در هر دو سایت یکی است و هر دو
+کلید روی هر دو نشانی کار می‌کنند. اگر می‌خواهید درخواست‌ها از نشانی گیسو بروند، در تنظیمات فیلد «نشانی API» را
+`https://gisoo.pro/api/v1` بگذارید.
 
 <a id="ticket-modes"></a>
 
@@ -179,6 +185,7 @@ WHMCS نرم‌افزار تجاری است و در این مخزن نیست. آ
 
 ## مخزن‌های دیگر نِت اَرز
 
+- [گیسو](https://github.com/netarz/gisoo): برند هوش مصنوعی نِت اَرز؛ اپ فارسی برای گفت‌وگو با بیش از ۴۰۰ مدل، ساخت تصویر، ویدیو، موسیقی و صدا، کارشناس‌های هوش مصنوعی و گفت‌وگوی صوتی، و وب‌سرویس سازگار با OpenAI و Anthropic (Claude Code). [gisoo.pro](https://gisoo.pro/?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=related)
 - [نمونه‌کد وب‌سرویس هوش مصنوعی](https://github.com/netarz/ai-api-examples): Python، Node.js، PHP، Laravel، cURL، LangChain، n8n و ربات تلگرام.
 - [نمونه‌کد API نرخ ارز](https://github.com/netarz/fx-api-examples) و [افزونهٔ وردپرس نرخ ارز](https://github.com/netarz/netarz-fx-wordpress).
 
@@ -229,7 +236,9 @@ It runs on the [NetArz AI API](https://netarz.ir/ai-api?utm_source=github&utm_me
 5. Recommended: create an admin user called "Support assistant" and choose it under Tickets so AI replies carry that name.
    Keep the WHMCS cron running every five minutes.
 
-Requirements: WHMCS 8.0+, PHP 7.4+ with curl, json and mbstring, outbound HTTPS to `netarz.ir`.
+Requirements: WHMCS 8.0+, PHP 7.4+ with curl, json and mbstring, outbound HTTPS to `netarz.ir` (or `gisoo.pro` if you use Gisoo's address).
+
+**Gisoo keys work too.** [Gisoo](https://gisoo.pro/?utm_source=github&utm_medium=referral&utm_campaign=netarz-ai-whmcs&utm_content=english) is NetArz's AI brand; the account and AI credit are shared, and a key made there (`sk-gisoo-v1-…`) works in step 4. To send requests to Gisoo's address, set *API address* to `https://gisoo.pro/api/v1`. More about Gisoo (Persian AI app, OpenAI/Anthropic-compatible API, Claude Code): [netarz/gisoo](https://github.com/netarz/gisoo).
 
 The ticket mode starts as **drafts for staff**: nothing reaches a customer unseen until you switch automatic mode on. Try the
 *Test the assistant* console under Knowledge first.
