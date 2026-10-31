@@ -30,14 +30,14 @@ if ($path === '/api/ai/v1/models') {
     return true;
 }
 
-if ($auth !== 'Bearer sk-ntz-v1-e2etestkey0123456789ab') {
+if (! preg_match('/^Bearer (sk-(?:ntz|gisoo)-v1-)e2etestkey0123456789ab$/', $auth, $key)) {
     out(401, ['error' => ['message' => 'Invalid API key.', 'type' => 'authentication_error', 'code' => 'invalid_api_key']]);
     return true;
 }
 
 if ($path === '/api/ai/v1/me') {
     out(200, ['object' => 'account', 'balance' => ['usd' => '8.412300', 'usd_display' => '$8.41', 'toman_estimate' => 2011000], 'status' => 'active',
-        'project' => ['id' => 3, 'name' => 'Pars Host support'], 'key' => ['name' => 'whmcs', 'prefix' => 'sk-ntz-v1-e2', 'rpm_limit' => 60, 'spend_limit_usd' => null, 'spent_usd' => '0.4', 'expires_at' => null],
+        'project' => ['id' => 3, 'name' => 'Pars Host support'], 'key' => ['name' => 'whmcs', 'prefix' => $key[1].'e2', 'rpm_limit' => 60, 'spend_limit_usd' => null, 'spent_usd' => '0.4', 'expires_at' => null],
         'limits' => ['concurrency' => 4, 'max_request_kb' => 512]]);
     return true;
 }

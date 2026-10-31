@@ -87,6 +87,19 @@ $mode = (string) Settings::get('ticket_mode');
     </article>
 </section>
 
+<?php if (Settings::bool('chat_rating') || $satisfaction['rated'] > 0): ?>
+<section class="ntz-card ntz-satisfaction">
+    <div class="ntz-card-head"><span class="ntz-card-icon"><?= $icon('thumbs-up', 18) ?></span><span><?= $t('dash_satisfaction') ?></span></div>
+    <?php if ($satisfaction['percent'] === null): ?>
+        <p class="ntz-empty"><?= $t('dash_satisfaction_none') ?></p>
+    <?php else: ?>
+        <div class="ntz-big"><?= \NetArz\WhmcsAi\Lang::digits((string) $satisfaction['percent']) ?>%</div>
+        <div class="ntz-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<?= (int) $satisfaction['percent'] ?>"><i style="width: <?= (int) $satisfaction['percent'] ?>%"></i></div>
+        <p class="ntz-muted ntz-small"><?= $t('dash_rated', array_map(function ($n) { return \NetArz\WhmcsAi\Lang::digits((string) $n); }, $satisfaction)) ?></p>
+    <?php endif; ?>
+</section>
+<?php endif; ?>
+
 <?php if ($balance && $balance['ok']): ?>
 <section class="ntz-card ntz-account">
     <div class="ntz-kv"><span><?= $t('dash_project') ?></span><strong><?= $e($balance['project']) ?></strong></div>

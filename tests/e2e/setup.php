@@ -29,11 +29,12 @@ if ($result['status'] !== 'success') {
     exit(1);
 }
 
-Settings::set('api_key', 'sk-ntz-v1-e2etestkey0123456789ab');
+Settings::set('api_key', \NetArz\WhmcsAi\Brand::get('key_prefix').'e2etestkey0123456789ab'); // sk-ntz-v1-… or sk-gisoo-v1-…
 Settings::set('base_url', rtrim($argv[2], '/').'/api/ai/v1');
 Settings::set('ticket_mode', 'draft');
 Settings::set('chat_burst_ms', 1500);
 Settings::set('chat_handoff_wait', 1);
+Settings::set('chat_suggestions', "Do you have a VPS in Amsterdam?\nWhere is my order?");
 Settings::set('knowledge_custom', "Support hours: Saturday to Wednesday, 9:00 to 17:00 Tehran time.\nRefunds: shared hosting within 7 days; domains are never refunded.");
 
 echo "ready\n";

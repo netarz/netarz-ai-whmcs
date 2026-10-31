@@ -170,6 +170,28 @@
   animation: ntzc-in .3s var(--ntzc-ease) both;
 }
 .ntzc-offer p, .ntzc-login p { margin: 0 0 10px; font-size: 13px; color: var(--ntzc-muted); }
+
+/* starter questions */
+.ntzc-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; animation: ntzc-in .3s var(--ntzc-ease) both; }
+.ntzc-chip {
+  padding: 7px 12px; font: inherit; font-size: 13px; line-height: 1.4; color: var(--ntzc-ink); cursor: pointer;
+  background: var(--ntzc-bg); border: 1px solid color-mix(in srgb, var(--ntzc-accent) 55%, var(--ntzc-line)); border-radius: 999px;
+  transition: background .15s, transform .15s;
+}
+.ntzc-chip:hover { background: color-mix(in srgb, var(--ntzc-accent) 16%, var(--ntzc-bg)); transform: translateY(-1px); }
+.ntzc-chip:focus-visible, .ntzc-rate-btn:focus-visible { outline: 2px solid var(--ntzc-accent); outline-offset: 2px; }
+
+/* conversation rating */
+.ntzc-rate { margin: 10px 0 4px; padding: 10px 12px; border-radius: 14px; background: var(--ntzc-bg); border: 1px solid var(--ntzc-line); animation: ntzc-in .3s var(--ntzc-ease) both; }
+.ntzc-rate p { margin: 0 0 8px; font-size: 13px; color: var(--ntzc-muted); }
+.ntzc-rate p.ntzc-rate-done { margin: 0; }
+.ntzc-rate-row { display: flex; gap: 8px; }
+.ntzc-rate-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font: inherit; font-size: 13px; color: var(--ntzc-ink); cursor: pointer;
+  background: var(--ntzc-surface); border: 1px solid var(--ntzc-line); border-radius: 10px; transition: background .15s;
+}
+.ntzc-rate-btn:hover { background: color-mix(in srgb, var(--ntzc-accent) 16%, var(--ntzc-surface)); }
+.ntzc-rate-btn:disabled { opacity: .6; cursor: wait; }
 .ntzc-identity {
   display: flex; flex-direction: column; gap: 8px;
   padding: 14px; border-top: 1px solid var(--ntzc-line); background: var(--ntzc-bg);

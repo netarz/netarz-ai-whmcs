@@ -45,7 +45,7 @@ class Agent
 
         // Retrieval looks at the last few customer messages, not just the last one:
         // "how much is it?" only makes sense next to the message before it.
-        $knowledge = Knowledge::forQuestion(implode("\n", array_reverse($recentUser)));
+        $knowledge = Knowledge::forQuestion(implode("\n", array_reverse($recentUser)), Knowledge::BUDGET, $clientId);
         $client = ClientContext::forClient($clientId);
         $language = self::language($lastQuestion);
 

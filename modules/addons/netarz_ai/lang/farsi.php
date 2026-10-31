@@ -8,7 +8,7 @@
 $_ADDONLANG['_language'] = 'farsi';
 
 /* module */
-$_ADDONLANG['module_title'] = 'هوش مصنوعی نِت اَرز';
+$_ADDONLANG['module_title'] = 'هوش مصنوعی :service';
 $_ADDONLANG['module_subtitle'] = 'چت آنلاین و پاسخ تیکت با هوش مصنوعی';
 $_ADDONLANG['default_agent_name'] = 'دستیار پشتیبانی';
 $_ADDONLANG['tab_dashboard'] = 'پیشخوان';
@@ -18,17 +18,17 @@ $_ADDONLANG['tab_knowledge'] = 'منابع دانش';
 $_ADDONLANG['tab_settings'] = 'تنظیمات';
 $_ADDONLANG['tab_logs'] = 'گزارش';
 $_ADDONLANG['foot_docs'] = 'مستندات API';
-$_ADDONLANG['foot_panel'] = 'پنل نِت اَرز';
+$_ADDONLANG['foot_panel'] = 'پنل :service';
 
 /* setup */
-$_ADDONLANG['setup_title'] = 'کلید API نِت اَرز را وصل کنید';
-$_ADDONLANG['setup_text'] = 'هزینهٔ هر پاسخ در چت و تیکت از اعتبار هوش مصنوعی شما در نِت اَرز کم می‌شود. کلید دسترسی (API Key) را در پنل نِت اَرز بسازید و در «تنظیمات» بگذارید؛ دستیار از همان لحظه در چت جواب می‌دهد.';
+$_ADDONLANG['setup_title'] = 'کلید API :service را وصل کنید';
+$_ADDONLANG['setup_text'] = 'هزینهٔ هر پاسخ در چت و تیکت از اعتبار هوش مصنوعی شما در :service کم می‌شود. کلید دسترسی (API Key) را در پنل :service بسازید و در «تنظیمات» بگذارید؛ دستیار از همان لحظه در چت جواب می‌دهد.';
 $_ADDONLANG['setup_get_key'] = 'ساخت کلید API';
 $_ADDONLANG['setup_open_settings'] = 'رفتن به تنظیمات';
 
 /* dashboard */
 $_ADDONLANG['dash_balance'] = 'اعتبار هوش مصنوعی';
-$_ADDONLANG['dash_toman'] = 'حدود :amount تومان';
+$_ADDONLANG['dash_toman'] = 'حدود :amount :money';
 $_ADDONLANG['dash_topup'] = 'افزایش اعتبار';
 $_ADDONLANG['dash_no_key'] = 'هنوز کلید API وارد نشده است.';
 $_ADDONLANG['dash_today'] = 'هزینهٔ امروز';
@@ -41,7 +41,7 @@ $_ADDONLANG['dash_tickets'] = 'تیکت‌های این ماه';
 $_ADDONLANG['dash_ticket_mode'] = 'حالت تیکت';
 $_ADDONLANG['dash_handoffs'] = ':n مورد به همکاران شما سپرده شد';
 $_ADDONLANG['dash_chart'] = 'هزینهٔ ۱۴ روز گذشته';
-$_ADDONLANG['dash_chart_note'] = 'این هزینه تخمینی است: تعداد توکن ضرب در قیمت عمومی هر مدل. رقم دقیق را در پنل نِت اَرز می‌بینید.';
+$_ADDONLANG['dash_chart_note'] = 'این هزینه تخمینی است: تعداد توکن ضرب در قیمت عمومی هر مدل. رقم دقیق را در پنل :service می‌بینید.';
 $_ADDONLANG['dash_recent'] = 'آخرین کارهای تیکت';
 $_ADDONLANG['dash_recent_empty'] = 'هنوز چیزی نیست. وقتی حالت تیکت روشن باشد، تیکت‌های تازه این‌جا می‌آیند.';
 $_ADDONLANG['dash_project'] = 'پروژه';
@@ -182,13 +182,13 @@ $_ADDONLANG['s_knowledge'] = 'منابع دانش';
 $_ADDONLANG['s_money'] = 'بودجه و داده‌ها';
 $_ADDONLANG['save_settings'] = 'ذخیرهٔ تنظیمات';
 $_ADDONLANG['settings_saved'] = 'تنظیمات ذخیره شد.';
-$_ADDONLANG['f_api_key'] = 'کلید API نِت اَرز';
-$_ADDONLANG['f_api_key_hint'] = 'با sk-ntz- شروع می‌شود و رمزنگاری‌شده ذخیره می‌شود. کلید را در پنل نِت اَرز بسازید:';
+$_ADDONLANG['f_api_key'] = 'کلید API :service';
+$_ADDONLANG['f_api_key_hint'] = 'با :key_prefix شروع می‌شود و رمزنگاری‌شده ذخیره می‌شود. کلید را در پنل :service بسازید:';
 $_ADDONLANG['f_test'] = 'آزمایش اتصال';
 $_ADDONLANG['f_model'] = 'مدل';
-$_ADDONLANG['f_model_hint'] = 'هر مدل گفتگوی کاتالوگ نِت اَرز را می‌توانید انتخاب کنید. پیش‌فرض gpt-4o-mini است که برای پشتیبانی کافی است و هزینهٔ کمی دارد.';
+$_ADDONLANG['f_model_hint'] = 'هر مدل گفتگوی کاتالوگ :service را می‌توانید انتخاب کنید. پیش‌فرض gpt-4o-mini است که برای پشتیبانی کافی است و هزینهٔ کمی دارد.';
 $_ADDONLANG['f_base_url'] = 'نشانی API';
-$_ADDONLANG['f_base_url_hint'] = 'این نشانی را تغییر ندهید، مگر پشتیبانی نِت اَرز بخواهد.';
+$_ADDONLANG['f_base_url_hint'] = 'این نشانی را تغییر ندهید، مگر پشتیبانی :service بخواهد.';
 $_ADDONLANG['f_temperature'] = 'میزان خلاقیت';
 $_ADDONLANG['f_temperature_hint'] = 'همان temperature مدل. عدد کمتر یعنی پاسخ یکدست‌تر؛ برای پشتیبانی ۰٫۲ تا ۰٫۴ مناسب است.';
 $_ADDONLANG['f_max_tokens'] = 'بلندترین پاسخ (توکن)';
@@ -218,7 +218,7 @@ $_ADDONLANG['f_chat_guest_email'] = 'پرسیدن نام و ایمیل از با
 $_ADDONLANG['f_chat_guest_email_hint'] = 'برای تبدیل چتِ مهمان به تیکت لازم است.';
 $_ADDONLANG['f_chat_alerts'] = 'خبر دادن به همکاران در پنل مدیریت';
 $_ADDONLANG['f_chat_alerts_hint'] = 'وقتی بازدیدکننده‌ای منتظر همکار است، پیام کوچکی در همهٔ صفحه‌های مدیریت دیده می‌شود.';
-$_ADDONLANG['f_chat_credit'] = 'نمایش «هوش مصنوعی از نِت اَرز»';
+$_ADDONLANG['f_chat_credit'] = 'نمایش «هوش مصنوعی از :service»';
 $_ADDONLANG['f_chat_credit_hint'] = 'یک خط کوچک زیر کادر چت.';
 $_ADDONLANG['f_chat_position'] = 'جای دکمه';
 $_ADDONLANG['pos_right'] = 'پایین، سمت راست';
@@ -265,7 +265,7 @@ $_ADDONLANG['f_kn_products'] = 'محصولات و قیمت‌ها';
 $_ADDONLANG['f_kn_domains'] = 'قیمت دامنه‌ها';
 $_ADDONLANG['f_kn_network'] = 'اختلال‌های شبکه';
 $_ADDONLANG['f_kn_client'] = 'حساب خودِ مشتری';
-$_ADDONLANG['f_kn_client_hint'] = 'سرویس‌ها، دامنه‌ها و فاکتورهای پرداخت‌نشدهٔ مشتریِ واردشده. رمز عبور، نام کاربری سرویس و IP سرور به هوش مصنوعی فرستاده نمی‌شود.';
+$_ADDONLANG['f_kn_client_hint'] = 'سرویس‌ها، دامنه‌ها، سفارش‌های در انتظار و فاکتورهای پرداخت‌نشدهٔ مشتریِ واردشده. رمز عبور، نام کاربری سرویس و IP سرور به هوش مصنوعی فرستاده نمی‌شود.';
 $_ADDONLANG['f_kn_custom_where'] = 'یادداشت‌های خودتان را این‌جا ویرایش کنید:';
 $_ADDONLANG['f_budget'] = 'سقف هزینهٔ روزانه (دلار)';
 $_ADDONLANG['f_budget_hint'] = 'صفر یعنی بدون سقف. وقتی پر شود، هوش مصنوعی تا فردا کنار می‌کشد.';
@@ -281,40 +281,40 @@ $_ADDONLANG['danger_button'] = 'پاک کردن همه';
 
 /* logs */
 $_ADDONLANG['logs_title'] = 'گزارش درخواست‌ها';
-$_ADDONLANG['logs_intro'] = '۲۰۰ درخواست آخر به API نِت اَرز. هر درخواست را با همین شناسه در پنل نِت اَرز هم پیدا می‌کنید.';
+$_ADDONLANG['logs_intro'] = '۲۰۰ درخواست آخر به API :service. هر درخواست را با همین شناسه در پنل :service هم پیدا می‌کنید.';
 $_ADDONLANG['logs_empty'] = 'هنوز درخواستی نیست.';
 $_ADDONLANG['channel_chat'] = 'چت';
 $_ADDONLANG['channel_ticket'] = 'تیکت';
 $_ADDONLANG['channel_test'] = 'آزمایش';
 
 /* widget */
-$_ADDONLANG['widget_no_key'] = 'کلید API نِت اَرز را وصل کنید تا اعتبار هوش مصنوعی این‌جا دیده شود.';
+$_ADDONLANG['widget_no_key'] = 'کلید API :service را وصل کنید تا اعتبار هوش مصنوعی این‌جا دیده شود.';
 $_ADDONLANG['widget_calls'] = 'درخواست امروز';
 $_ADDONLANG['widget_waiting'] = 'چت منتظر';
-$_ADDONLANG['widget_open'] = 'باز کردن هوش مصنوعی نِت اَرز';
+$_ADDONLANG['widget_open'] = 'باز کردن هوش مصنوعی :service';
 
 /* errors */
-$_ADDONLANG['err_no_key'] = 'کلید API نِت اَرز وارد نشده است.';
-$_ADDONLANG['err_api_key_format'] = 'این کلید API نِت اَرز نیست. کلید با sk-ntz- شروع می‌شود.';
+$_ADDONLANG['err_no_key'] = 'کلید API :service وارد نشده است.';
+$_ADDONLANG['err_api_key_format'] = 'این کلید API :service نیست. کلید با :key_prefix شروع می‌شود.';
 $_ADDONLANG['err_base_url'] = 'نشانی API باید با https:// شروع شود.';
 $_ADDONLANG['err_color'] = 'رنگ را به شکل #ffc700 بنویسید.';
-$_ADDONLANG['err_network'] = 'اتصال به API نِت اَرز برقرار نشد. اینترنت و فایروال سرور را بررسی کنید.';
-$_ADDONLANG['err_http'] = 'API نِت اَرز این وضعیت را برگرداند:';
+$_ADDONLANG['err_network'] = 'اتصال به API :service برقرار نشد. اینترنت و فایروال سرور را بررسی کنید.';
+$_ADDONLANG['err_http'] = 'API :service این وضعیت را برگرداند:';
 $_ADDONLANG['err_budget'] = 'سقف هزینهٔ امروز پر شده است. هوش مصنوعی فردا دوباره شروع می‌کند؛ اگر زودتر لازم دارید، سقف را در «تنظیمات» بالا ببرید.';
-$_ADDONLANG['err_low_balance'] = 'اعتبار هوش مصنوعی شما از حداقلی که تعیین کرده‌اید کمتر است. اعتبار را افزایش دهید یا حداقل را کمتر کنید.';
+$_ADDONLANG['err_low_balance'] = 'اعتبار هوش مصنوعی شما در :service از حداقلی که تعیین کرده‌اید کمتر است. اعتبار را افزایش دهید یا حداقل را کمتر کنید.';
 $_ADDONLANG['err_csrf'] = 'نشست شما تمام شده است. صفحه را از نو باز کنید و دوباره امتحان کنید.';
 $_ADDONLANG['err_empty_question'] = 'اول یک پرسش بنویسید.';
 $_ADDONLANG['err_generic'] = 'مشکلی پیش آمد. دوباره امتحان کنید.';
 
 /* alerts */
-$_ADDONLANG['alert_subject'] = 'هوش مصنوعی نِت اَرز: اعتبار شما را بررسی کنید';
-$_ADDONLANG['alert_low_body'] = "اعتبار هوش مصنوعی شما در نِت اَرز :balance است. اگر از :min کمتر شود، دستیار دیگر جواب نمی‌دهد و پیام‌ها به همکاران شما می‌رسد.\n\nافزایش اعتبار: :url";
-$_ADDONLANG['alert_broken_body'] = "API نِت اَرز کلید را نپذیرفت: :error\n\nکلید را در پنل نِت اَرز بررسی کنید: :url";
+$_ADDONLANG['alert_subject'] = 'هوش مصنوعی :service: اعتبار شما را بررسی کنید';
+$_ADDONLANG['alert_low_body'] = "اعتبار هوش مصنوعی شما در :service :balance است. اگر از :min کمتر شود، دستیار دیگر جواب نمی‌دهد و پیام‌ها به همکاران شما می‌رسد.\n\nافزایش اعتبار: :url";
+$_ADDONLANG['alert_broken_body'] = "API :service کلید را نپذیرفت: :error\n\nکلید را در پنل :service بررسی کنید: :url";
 $_ADDONLANG['alert_toast_title'] = 'بازدیدکننده‌ای منتظر است';
 $_ADDONLANG['alert_toast_open'] = 'باز کردن چت';
 
 /* notes written into WHMCS */
-$_ADDONLANG['note_handoff'] = "هوش مصنوعی نِت اَرز: این تیکت را یکی از همکاران جواب دهد.\nدلیل: :reason (اطمینان :confidence٪)";
+$_ADDONLANG['note_handoff'] = "هوش مصنوعی :service: این تیکت را یکی از همکاران جواب دهد.\nدلیل: :reason (اطمینان :confidence٪)";
 $_ADDONLANG['note_draft_follows'] = 'پاسخ پیشنهادی:';
 $_ADDONLANG['attachment_note'] = 'پیوست';
 
@@ -352,7 +352,7 @@ $_ADDONLANG['w_login'] = 'ورود به حساب';
 $_ADDONLANG['w_offer_ticket'] = 'الان همکاران ما آزاد نیستند. گفتگو را به تیکت تبدیل کنید تا جوابتان را در تیکت بدهیم و با ایمیل خبرتان کنیم.';
 $_ADDONLANG['w_make_ticket'] = 'ساخت تیکت';
 $_ADDONLANG['w_view_ticket'] = 'دیدن تیکت';
-$_ADDONLANG['w_credit'] = 'هوش مصنوعی از نِت اَرز';
+$_ADDONLANG['w_credit'] = 'هوش مصنوعی از :service';
 $_ADDONLANG['w_err_generic'] = 'مشکلی پیش آمد. دوباره امتحان کنید.';
 $_ADDONLANG['w_err_too_long'] = 'این پیام بلندتر از حد مجاز است. کوتاه‌ترش کنید یا در چند پیام بفرستید.';
 $_ADDONLANG['w_err_empty'] = 'اول چیزی بنویسید.';
@@ -380,3 +380,37 @@ $_ADDONLANG['reason_handoff'] = 'نیاز به همکار';
 $_ADDONLANG['reason_malformed_output'] = 'مدل در قالب درست جواب نداد';
 $_ADDONLANG['reason_empty_reply'] = 'مدل جواب خالی داد';
 $_ADDONLANG['reason_model_chose_silence'] = 'مدل حرفی برای گفتن نداشت';
+
+// 1.1.0
+$_ADDONLANG['f_api_host'] = 'نشانی API';
+$_ADDONLANG['f_api_host_hint'] = 'کلید، اعتبار و مدل‌ها روی همهٔ نشانی‌ها یکی است. اگر سرور WHMCS شما در دیتاسنتر ایران است، نشانی ایران را انتخاب کنید.';
+$_ADDONLANG['host_main'] = 'gisoo.pro (نشانی اصلی)';
+$_ADDONLANG['host_iran'] = 'ir.gisoo.pro (برای سرورهای داخل ایران)';
+$_ADDONLANG['host_legacy'] = 'netarz.ir';
+$_ADDONLANG['host_custom'] = 'نشانی دیگر…';
+$_ADDONLANG['f_base_url_custom'] = 'نشانی دلخواه API';
+$_ADDONLANG['f_base_url_custom_hint'] = 'فقط وقتی به کار می‌رود که بالا «نشانی دیگر» را انتخاب کرده باشید.';
+$_ADDONLANG['f_kn_stock'] = 'محصولات ناموجود';
+$_ADDONLANG['f_kn_stock_hint'] = 'از کنترل موجودی خود WHMCS خوانده می‌شود (Products ← Other ← Stock Control). دستیار محصولی را که موجودی‌اش تمام شده پیشنهاد نمی‌دهد و لینک سفارشش را نمی‌فرستد.';
+$_ADDONLANG['stock_mark'] = 'دستیار بگوید فعلاً موجود نیست';
+$_ADDONLANG['stock_hide'] = 'دستیار اصلاً آن را نبیند';
+$_ADDONLANG['f_kn_addons'] = 'افزودنی‌های محصول (Addons)';
+$_ADDONLANG['f_kn_exclude'] = 'محصولاتی که دستیار پیشنهاد نمی‌دهد';
+$_ADDONLANG['f_kn_exclude_hint'] = 'شناسهٔ محصول‌ها را با ویرگول جدا کنید؛ مثلاً 12, 15. برای پلن‌هایی که در سایت دیده می‌شوند ولی فروششان فقط با همکاران شماست.';
+$_ADDONLANG['f_chat_suggestions'] = 'سؤال‌های پیشنهادی';
+$_ADDONLANG['f_chat_suggestions_hint'] = 'حداکثر چهار سؤال، هر خط یکی. زیر پیام خوشامد نشان داده می‌شوند؛ بازدیدکننده با زدن هر کدام، همان سؤال را می‌فرستد.';
+$_ADDONLANG['f_chat_rating'] = 'پرسیدن نظر بازدیدکننده دربارهٔ گفتگو';
+$_ADDONLANG['f_chat_rating_hint'] = 'بعد از اولین جواب می‌پرسد «این گفتگو کمکتان کرد؟». اگر جواب «نه» باشد، آن گفتگو در صندوق گفتگوها علامت می‌خورد.';
+$_ADDONLANG['dash_satisfaction'] = 'رضایت از چت (۳۰ روز)';
+$_ADDONLANG['dash_satisfaction_none'] = 'هنوز نظری ثبت نشده است.';
+$_ADDONLANG['dash_rated'] = ':up کمک کرد · :down کمک نکرد · :rated نظر از :total گفتگو';
+$_ADDONLANG['inbox_rated_up'] = 'نظر بازدیدکننده: کمک کرد';
+$_ADDONLANG['inbox_rated_down'] = 'نظر بازدیدکننده: کمک نکرد';
+$_ADDONLANG['chat_rated_down'] = 'متأسفم که جوابم کمکتون نکرد. همکارم این گفتگو رو می‌بینه؛ اگه سؤالی مونده، همین‌جا بنویسید.';
+$_ADDONLANG['w_suggestions'] = 'سؤال‌های پیشنهادی';
+$_ADDONLANG['w_rate_question'] = 'این گفتگو کمکتان کرد؟';
+$_ADDONLANG['w_rate_yes'] = 'بله';
+$_ADDONLANG['w_rate_no'] = 'نه';
+$_ADDONLANG['w_rate_thanks'] = 'ممنون که نظرتان را گفتید.';
+$_ADDONLANG['w_rate_sorry'] = 'نظرتان ثبت شد.';
+$_ADDONLANG['w_err_cannot_rate'] = 'نظرتان دربارهٔ این گفتگو قبلاً ثبت شده است.';

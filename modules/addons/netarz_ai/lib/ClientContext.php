@@ -4,7 +4,7 @@ namespace NetArz\WhmcsAi;
 
 /**
  * What the agent may know about the one customer it is talking to: name,
- * services, domains, unpaid invoices. Built from localAPI and a fixed list of
+ * services, domains, pending orders, unpaid invoices. Built from localAPI and a fixed list of
  * fields — passwords, usernames, server IPs, custom fields and notes are never
  * copied, so the model cannot be talked into repeating them.
  */
@@ -56,6 +56,18 @@ class ClientContext
                 $lines[] = '- '.($domain['domainname'] ?? '').' — '.($domain['status'] ?? '')
                     .(! empty($domain['expirydate']) && $domain['expirydate'] !== '0000-00-00' ? ', expires '.$domain['expirydate'] : '')
                     .(isset($domain['donotrenew']) ? ((int) $domain['donotrenew'] === 1 ? ', auto-renew off' : ', auto-renew on') : '');
+            }
+        }
+
+        // Orders still waiting to be accepted: "where is my order?" is the most common sales-side question.
+        $orders = self::rows(Whmcs::api('GetOrders', ['userid' => $clientId, 'status' => 'Pending', 'limitnum' => 10]), 'orders', 'order');
+        if ($orders) {
+            $lines[] = "\nPending orders (placed, not yet accepted by staff):";
+            foreach ($orders as $order) {
+                $paid = strtolower((string) ($order['paymentstatus'] ?? ''));
+                $lines[] = '- order #'.(int) ($order['id'] ?? 0).' — placed '.substr((string) ($order['date'] ?? ''), 0, 10)
+                    .(isset($order['amount']) ? ', '.$order['amount'].' '.$currency : '')
+                    .($paid !== '' ? ', invoice '.($paid === 'paid' ? 'paid' : 'not paid yet') : '');
             }
         }
 

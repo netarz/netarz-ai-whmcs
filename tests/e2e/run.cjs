@@ -292,6 +292,41 @@ async function shot(page, name) {
     await p.waitForSelector('.ntzc-msg.is-ai', { timeout: 8000 });
     check('a reload restores the conversation', (await p.$$('.ntzc-msg')).length >= 2);
 
+    /* ------------------------------- 1.1.0: starter questions, stock, rating */
+    console.log('\nStarter questions, stock and rating');
+    const minaCtx = await browser.createBrowserContext();
+    const m = await minaCtx.newPage();
+    watch(m, 'mina');
+    await m.setViewport({ width: 1280, height: 860 });
+    await m.goto(WHMCS + '/_login?as=2', { waitUntil: 'networkidle0' });
+    await m.goto(WHMCS + '/clientarea.php', { waitUntil: 'networkidle0' });
+    await m.click('.ntzc-launcher');
+    await m.waitForSelector('.ntzc.is-shown');
+    const chips = await m.$$eval('.ntzc-chip', (els) => els.map((e) => e.textContent));
+    check('starter questions show under the greeting', chips.length === 2 && chips[0] === 'Do you have a VPS in Amsterdam?', chips.join(' | '));
+    await shot(m, '12-starter-questions');
+    await m.click('.ntzc-chip');
+    await m.waitForSelector('.ntzc-msg.is-ai', { timeout: 15000 });
+    check('one tap sends the question', (await m.$eval('.ntzc-msg.is-visitor .ntzc-bubble', (e) => e.textContent)) === 'Do you have a VPS in Amsterdam?');
+    check('the starter questions go away once the chat starts', (await m.$$('.ntzc-chip')).length === 0);
+    const minaCall = gatewayLog().filter((r) => r.path === '/api/ai/v1/chat/completions').pop();
+    const minaPrompt = minaCall.body.messages[0].content;
+    check('a sold-out product reaches the model marked, with no order link', minaPrompt.includes('VPS Amsterdam 4GB — OUT OF STOCK') && !minaPrompt.includes('pid=6'));
+    check('a client billed in Toman is quoted in Toman', minaPrompt.includes('500,000 Toman'));
+    await m.waitForSelector('.ntzc-rate:not([hidden]) .ntzc-rate-btn', { timeout: 8000 });
+    check('after an answer the visitor is asked to rate the chat', true);
+    const rateButtons = await m.$$('.ntzc-rate-btn');
+    await rateButtons[1].click();
+    await m.waitForSelector('.ntzc-rate-done', { timeout: 8000 });
+    const told = await waitFor(async () => (await m.$$eval('.ntzc-system', (els) => els.map((e) => e.textContent).join(' '))).includes('did not help'));
+    check('a "no" tells the visitor a colleague will look', !!told);
+    await shot(m, '13-rated');
+    await a.goto(WHMCS + '/admin/addonmodules.php?module=netarz_ai&tab=inbox', { waitUntil: 'networkidle0' });
+    await a.waitForSelector('.ntz-thread');
+    check('the inbox marks the chat as not helpful', await a.$('.ntz-pill.is-rated-down') !== null);
+    await a.goto(WHMCS + '/admin/addonmodules.php?module=netarz_ai&tab=dashboard', { waitUntil: 'networkidle0' });
+    check('the dashboard shows chat satisfaction', (await a.$eval('.ntz-satisfaction', (e) => e.textContent)).includes('0%'));
+
     /* ---------------------------------------------------- hostile input */
     console.log('\nHostile input');
     // HTML typed by a visitor is shown as text.

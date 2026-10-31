@@ -21,7 +21,7 @@ class Knowledge
     /**
      * @return array{text: string, sources: array<int, array{type:string, title:string, url:string}>}
      */
-    public static function forQuestion(string $question, int $budget = self::BUDGET): array
+    public static function forQuestion(string $question, int $budget = self::BUDGET, int $clientId = 0): array
     {
         $terms = Text::searchTerms($question);
         $blocks = [];
@@ -78,10 +78,20 @@ class Knowledge
         }
 
         if (Settings::bool('knowledge_products')) {
-            $products = self::products($terms, max(1500, (int) ($remaining * 0.6)));
+            $currency = self::currencyFor($clientId);
+            $products = self::products($terms, max(1500, (int) ($remaining * 0.6)), $currency);
             if ($products !== '') {
-                $blocks[] = "## Products and prices (from the order form)\n".$products;
+                $soldOut = strpos($products, ' — OUT OF STOCK:') !== false;
+                $blocks[] = "## Products and prices (from the order form)\n"
+                    .($soldOut ? "Every product here can be ordered now, except the ones marked OUT OF STOCK.\n" : '').$products;
                 $remaining -= mb_strlen($products);
+            }
+            if (Settings::bool('knowledge_addons')) {
+                $addons = self::addons($terms, max(600, (int) ($remaining * 0.25)), $currency);
+                if ($addons !== '') {
+                    $blocks[] = "## Product add-ons (ordered together with a product)\n".$addons;
+                    $remaining -= mb_strlen($addons);
+                }
             }
         }
 
@@ -239,18 +249,27 @@ class Knowledge
     }
 
     /**
-     * Visible, non-retired products with their cheapest listed cycle in the
-     * default currency. Products whose name or group matches the question come
-     * first; the rest fill the budget.
+     * Visible, non-retired products with their listed cycles. Products whose name
+     * or group matches the question come first; the rest fill the budget.
+     *
+     * WHMCS stock control is honoured: a product with stock control on and no
+     * quantity left is marked OUT OF STOCK and carries no order link (or is left
+     * out, if the owner chose "hide"), so the assistant never sells what cannot be
+     * delivered. Products in the owner's exclusion list never appear.
      *
      * @param string[] $terms
+     * @param object|null $currency a tblcurrencies row; null = the default currency
      */
-    public static function products(array $terms, int $budget): string
+    public static function products(array $terms, int $budget, $currency = null): string
     {
         try {
-            $currency = Capsule::table('tblcurrencies')->where('default', 1)->first(['id', 'code', 'prefix', 'suffix']);
-            if (! $currency) {
-                $currency = Capsule::table('tblcurrencies')->orderBy('id')->first(['id', 'code', 'prefix', 'suffix']);
+            $currency = $currency ?: self::defaultCurrency();
+            $hasStock = self::hasStockColumns();
+
+            $columns = ['p.id', 'p.name', 'p.description', 'p.paytype', 'g.name as group_name'];
+            if ($hasStock) {
+                $columns[] = 'p.stockcontrol';
+                $columns[] = 'p.qty';
             }
 
             $query = Capsule::table('tblproducts as p')
@@ -262,51 +281,226 @@ class Knowledge
             if (Capsule::schema()->hasColumn('tblproducts', 'retired')) {
                 $query->where('p.retired', 0);
             }
-            $rows = $query->orderBy('g.order')->orderBy('p.order')->limit(300)
-                ->get(['p.id', 'p.name', 'p.description', 'p.paytype', 'g.name as group_name']);
-
-            $prices = [];
-            if ($currency) {
-                foreach (Capsule::table('tblpricing')->where('type', 'product')->where('currency', $currency->id)->get() as $price) {
-                    $prices[(int) $price->relid] = $price;
-                }
+            $excluded = Settings::excludedProducts();
+            if ($excluded) {
+                $query->whereNotIn('p.id', $excluded);
             }
+            $rows = $query->orderBy('g.order')->orderBy('p.order')->limit(300)->get($columns);
+
+            $prices = self::prices('product', $currency);
         } catch (\Throwable $e) {
             return '';
         }
 
+        $hideSoldOut = Settings::get('knowledge_stock') === 'hide';
         $base = Whmcs::systemUrl();
         $matched = [];
         $rest = [];
         foreach ($rows as $row) {
+            $left = $hasStock ? self::stockLeft($row) : null;
+            if ($left === 0 && $hideSoldOut) {
+                continue;
+            }
+
             $line = '- '.$row->group_name.' › '.$row->name;
-            $price = self::priceLine($row->paytype, $prices[(int) $row->id] ?? null, $currency);
-            if ($price !== '') {
-                $line .= ' — '.$price;
+            if ($left === 0) {
+                $line .= ' — OUT OF STOCK: do not offer it and send no order link; say it is not available right now and suggest an in-stock alternative from this list if one fits';
+            } else {
+                $price = self::priceLine($row->paytype, $prices[(int) $row->id] ?? null, $currency);
+                if ($price !== '') {
+                    $line .= ' — '.$price;
+                }
+                if ($left !== null && $left <= 5) {
+                    $line .= ' — only '.$left.' left';
+                }
             }
             $description = Text::limit(Text::plain((string) $row->description), 220);
             if ($description !== '') {
                 $line .= ' | '.str_replace("\n", ' ', $description);
             }
-            $line .= ' | order: '.$base.'cart.php?a=add&pid='.(int) $row->id;
-
-            $haystack = Text::normalize($row->name.' '.$row->group_name);
-            $hit = false;
-            foreach ($terms as $term) {
-                if (strpos($haystack, $term) !== false) {
-                    $hit = true;
-                    break;
-                }
+            if ($left !== 0) {
+                $line .= ' | order: '.$base.'cart.php?a=add&pid='.(int) $row->id;
             }
-            if ($hit) {
+
+            if (self::matches($row->name.' '.$row->group_name, $terms)) {
                 $matched[] = $line;
             } else {
                 $rest[] = $line;
             }
         }
 
+        return self::fill(array_merge($matched, $rest), $budget);
+    }
+
+    /** Units left under WHMCS stock control, or null when stock control is off (unlimited). */
+    public static function stockLeft(object $row): ?int
+    {
+        $control = $row->stockcontrol ?? 0;
+        $on = $control === true || in_array(strtolower((string) $control), ['1', 'on', 'true', 'yes'], true);
+
+        return $on ? max(0, (int) ($row->qty ?? 0)) : null;
+    }
+
+    /**
+     * Add-ons offered on the order form, with the products they belong to. Only
+     * add-ons of products the assistant may offer are listed.
+     *
+     * @param string[] $terms
+     * @param object|null $currency
+     */
+    public static function addons(array $terms, int $budget, $currency = null): string
+    {
+        try {
+            $schema = Capsule::schema();
+            if (! $schema->hasTable('tbladdons')) {
+                return '';
+            }
+            $currency = $currency ?: self::defaultCurrency();
+
+            $query = Capsule::table('tbladdons');
+            foreach (['hidden', 'retired'] as $column) {
+                if ($schema->hasColumn('tbladdons', $column)) {
+                    $query->where($column, 0);
+                }
+            }
+            if ($schema->hasColumn('tbladdons', 'showorder')) {
+                $query->whereIn('showorder', [1, '1', 'on']);
+            }
+            $rows = $query->orderBy('id')->limit(100)->get();
+
+            $products = self::offeredProductNames();
+            $prices = self::prices('addon', $currency);
+        } catch (\Throwable $e) {
+            return '';
+        }
+
+        $matched = [];
+        $rest = [];
+        foreach ($rows as $row) {
+            $for = [];
+            foreach (array_filter(array_map('intval', explode(',', (string) ($row->packages ?? '')))) as $pid) {
+                if (isset($products[$pid])) {
+                    $for[] = $products[$pid];
+                }
+            }
+            if (! $for) {
+                continue;
+            }
+
+            $cycle = strtolower(str_replace([' ', '-'], '', (string) ($row->billingcycle ?? '')));
+            $paytype = $cycle === 'free' ? 'free' : ($cycle === 'onetime' ? 'onetime' : 'recurring');
+            $line = '- '.$row->name;
+            $price = self::priceLine($paytype, $prices[(int) $row->id] ?? null, $currency);
+            if ($price !== '') {
+                $line .= ' — '.$price;
+            }
+            $line .= ' | with: '.implode(', ', array_slice($for, 0, 6));
+            $description = Text::limit(Text::plain((string) ($row->description ?? '')), 160);
+            if ($description !== '') {
+                $line .= ' | '.str_replace("\n", ' ', $description);
+            }
+
+            if (self::matches($row->name.' '.implode(' ', $for), $terms)) {
+                $matched[] = $line;
+            } else {
+                $rest[] = $line;
+            }
+        }
+
+        return self::fill(array_merge($matched, $rest), $budget);
+    }
+
+    /** @return array<int, string> id => name of every product the assistant may offer (visible, in stock, not excluded) */
+    private static function offeredProductNames(): array
+    {
+        $hasStock = self::hasStockColumns();
+        $query = Capsule::table('tblproducts')->where('hidden', 0);
+        if (Capsule::schema()->hasColumn('tblproducts', 'retired')) {
+            $query->where('retired', 0);
+        }
+        $excluded = Settings::excludedProducts();
+        if ($excluded) {
+            $query->whereNotIn('id', $excluded);
+        }
+
+        $out = [];
+        foreach ($query->get($hasStock ? ['id', 'name', 'stockcontrol', 'qty'] : ['id', 'name']) as $row) {
+            if (! $hasStock || self::stockLeft($row) !== 0) {
+                $out[(int) $row->id] = (string) $row->name;
+            }
+        }
+
+        return $out;
+    }
+
+    private static function hasStockColumns(): bool
+    {
+        $schema = Capsule::schema();
+
+        return $schema->hasColumn('tblproducts', 'stockcontrol') && $schema->hasColumn('tblproducts', 'qty');
+    }
+
+    /**
+     * The signed-in client's own currency, so a customer billed in Toman is quoted
+     * in Toman. Guests, and clients without a currency, get the default.
+     *
+     * @return object|null a tblcurrencies row
+     */
+    public static function currencyFor(int $clientId)
+    {
+        try {
+            if ($clientId > 0 && Capsule::schema()->hasColumn('tblclients', 'currency')) {
+                $id = (int) Capsule::table('tblclients')->where('id', $clientId)->value('currency');
+                $currency = $id > 0 ? Capsule::table('tblcurrencies')->where('id', $id)->first(['id', 'code', 'prefix', 'suffix']) : null;
+                if ($currency) {
+                    return $currency;
+                }
+            }
+
+            return self::defaultCurrency();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    private static function defaultCurrency()
+    {
+        $currency = Capsule::table('tblcurrencies')->where('default', 1)->first(['id', 'code', 'prefix', 'suffix']);
+
+        return $currency ?: Capsule::table('tblcurrencies')->orderBy('id')->first(['id', 'code', 'prefix', 'suffix']);
+    }
+
+    /** @return array<int, object> relid => tblpricing row */
+    private static function prices(string $type, $currency): array
+    {
+        $prices = [];
+        if ($currency) {
+            foreach (Capsule::table('tblpricing')->where('type', $type)->where('currency', $currency->id)->get() as $price) {
+                $prices[(int) $price->relid] = $price;
+            }
+        }
+
+        return $prices;
+    }
+
+    /** @param string[] $terms */
+    private static function matches(string $text, array $terms): bool
+    {
+        $haystack = Text::normalize($text);
+        foreach ($terms as $term) {
+            if (strpos($haystack, $term) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @param string[] $lines */
+    private static function fill(array $lines, int $budget): string
+    {
         $out = '';
-        foreach (array_merge($matched, $rest) as $line) {
+        foreach ($lines as $line) {
             if (mb_strlen($out) + mb_strlen($line) > $budget) {
                 break;
             }

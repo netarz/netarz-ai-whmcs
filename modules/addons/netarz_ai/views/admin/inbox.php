@@ -60,5 +60,7 @@
     'ticket_done' => \NetArz\WhmcsAi\Lang::get('inbox_ticket_done'),
     'handoff' => \NetArz\WhmcsAi\Lang::get('inbox_handoff_reason'),
     'confidence' => \NetArz\WhmcsAi\Lang::get('confidence'),
+    'rated_up' => \NetArz\WhmcsAi\Lang::get('inbox_rated_up'),
+    'rated_down' => \NetArz\WhmcsAi\Lang::get('inbox_rated_down'),
     'error' => \NetArz\WhmcsAi\Lang::get('err_generic'),
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>

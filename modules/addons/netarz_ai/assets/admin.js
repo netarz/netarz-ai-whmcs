@@ -268,6 +268,7 @@
         var tags = el('div', 'ntz-thread-tags');
         tags.appendChild(el('span', 'ntz-pill is-' + (t.status === 'closed' ? 'closed' : t.mode), modeLabel(t)));
         tags.appendChild(el('span', 'ntz-muted', t.client_id ? S.client + ' #' + t.client_id : S.guest));
+        if (t.rating === 1 || t.rating === -1) tags.appendChild(el('span', 'ntz-pill is-' + (t.rating > 0 ? 'rated-up' : 'rated-down'), t.rating > 0 ? S.rated_up : S.rated_down));
         if (t.unread) tags.appendChild(el('em', 'ntz-badge', String(t.unread)));
         li.appendChild(tags);
         li.addEventListener('click', function () { openThread(t.id); });

@@ -1,10 +1,10 @@
 {
     "name": "netarz/netarz-ai-whmcs",
-    "description": "AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API. Shows your NetArz AI credit inside WHMCS.",
+    "description": "AI live chat and AI ticket replies for WHMCS, powered by the Gisoo AI API (also released as the NetArz edition). Stock-aware product knowledge, client context and your AI credit inside WHMCS.",
     "type": "whmcs-addon",
     "license": "MIT",
-    "homepage": "https://netarz.ir/ai-api",
-    "keywords": ["whmcs", "whmcs-addon", "whmcs-module", "ai", "chatbot", "live-chat", "support-tickets", "openai", "persian"],
+    "homepage": "https://gisoo.pro/whmcs",
+    "keywords": ["whmcs", "gisoo", "whmcs-addon", "whmcs-module", "ai", "chatbot", "live-chat", "support-tickets", "openai", "persian"],
     "authors": [{ "name": "NetArz", "email": "dev@netarz.ir", "homepage": "https://netarz.ir" }],
     "require": {
         "php": ">=7.4",

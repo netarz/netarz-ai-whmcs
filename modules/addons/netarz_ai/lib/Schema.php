@@ -8,7 +8,7 @@ use WHMCS\Database\Capsule;
 /** Creates, upgrades and drops the module's tables. Every table is prefixed mod_netarz_ai_. */
 class Schema
 {
-    public const VERSION = '1.0.2';
+    public const VERSION = '1.1.0';
 
     public const TABLES = [
         'mod_netarz_ai_settings',
@@ -121,8 +121,24 @@ class Schema
             });
         }
 
+        self::addColumns();
+
         Settings::flush();
         Settings::set('db_version', self::VERSION);
+    }
+
+    /** Columns added after 1.0, for installs whose tables already exist. */
+    private static function addColumns(): void
+    {
+        $schema = Capsule::schema();
+
+        // 1.1.0: the visitor's rating of a conversation (1 = helpful, -1 = not helpful).
+        if (! $schema->hasColumn('mod_netarz_ai_threads', 'rating')) {
+            $schema->table('mod_netarz_ai_threads', function (Blueprint $t) {
+                $t->tinyInteger('rating')->nullable();
+                $t->timestamp('rated_at')->nullable();
+            });
+        }
     }
 
     /** Runs from _upgrade(); additive only, never drops data. */

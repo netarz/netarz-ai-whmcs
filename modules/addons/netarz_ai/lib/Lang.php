@@ -44,8 +44,17 @@ final class Lang
     /** @param array<string, string|int|float> $replace */
     public static function get(string $key, array $replace = [], ?string $language = null): string
     {
-        $strings = self::strings($language !== null ? self::resolve($language) : self::$current);
+        $resolved = $language !== null ? self::resolve($language) : self::$current;
+        $strings = self::strings($resolved);
         $text = $strings[$key] ?? (self::strings('english')[$key] ?? $key);
+
+        // The edition's own words, so one string serves both NetArz and Gisoo.
+        $text = strtr($text, [
+            ':service' => Brand::name($resolved),
+            ':money' => Brand::money($resolved),
+            ':key_prefix' => Brand::get('key_prefix'),
+            ':panel' => Brand::panelText(),
+        ]);
 
         foreach ($replace as $name => $value) {
             $text = str_replace(':'.$name, (string) $value, $text);
@@ -93,10 +102,11 @@ final class Lang
     /** Only the keys starting with a prefix, without it — handy for the chat widget. */
     public static function group(string $prefix, ?string $language = null): array
     {
+        $resolved = $language !== null ? self::resolve($language) : self::$current;
         $out = [];
-        foreach (self::strings($language !== null ? self::resolve($language) : self::$current) as $key => $value) {
+        foreach (self::strings($resolved) as $key => $value) {
             if (strpos($key, $prefix) === 0) {
-                $out[substr($key, strlen($prefix))] = $value;
+                $out[substr($key, strlen($prefix))] = self::get($key, [], $resolved);
             }
         }
 

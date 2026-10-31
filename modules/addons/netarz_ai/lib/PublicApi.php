@@ -13,7 +13,7 @@ namespace NetArz\WhmcsAi;
  */
 class PublicApi
 {
-    public const ACTIONS = ['boot', 'start', 'send', 'reply', 'poll', 'ticket', 'end'];
+    public const ACTIONS = ['boot', 'start', 'send', 'reply', 'poll', 'ticket', 'rate', 'end'];
 
     public static function handle(string $action): array
     {
@@ -105,6 +105,13 @@ class PublicApi
 
                 return ['ok' => true, 'url' => $result['url'], 'tid' => $result['tid'] ?? '', 'state' => Chat::state(Chat::thread((int) $thread->id))] + Chat::poll($thread, max(0, (int) ($input['after'] ?? 0)));
 
+            case 'rate':
+                if (! Chat::rate($thread, (int) ($input['rating'] ?? 0))) {
+                    return self::error('cannot_rate', 422);
+                }
+
+                return ['ok' => true, 'state' => Chat::state(Chat::thread((int) $thread->id))];
+
             case 'end':
                 Chat::close((int) $thread->id);
 
@@ -145,6 +152,8 @@ class PublicApi
                 'max_length' => (int) Settings::get('chat_max_length'),
                 'ai' => Settings::bool('chat_ai_enabled'),
                 'credit' => Settings::bool('chat_credit'),
+                'credit_url' => Links::landing('chat-credit', 'chat-widget'),
+                'suggestions' => Settings::chatSuggestions(),
                 'needs_identity' => $clientId <= 0 && Settings::bool('chat_guest_email'),
                 'login_required' => $guestBlocked,
                 'login_url' => Whmcs::systemUrl().'login.php',

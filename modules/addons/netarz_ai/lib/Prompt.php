@@ -47,6 +47,7 @@ TXT;
 8. Links: write the full URL from KNOWLEDGE as plain text, never markdown like [text](url), never shortened or invented. No emoji, no markdown bold or headings.
 9. Stay on topic: this company's services, orders, billing, domains, hosting and technical help about them. Politely decline anything else in one sentence.
 10. When you hand off, say a colleague will reply here (in this chat, or on this ticket). Never promise a phone call, a time, or an outcome.
+11. Sell only what can be ordered now. A product marked OUT OF STOCK, or one that is not in KNOWLEDGE at all, is never offered, recommended or linked: say plainly it is not available right now, offer an in-stock alternative from KNOWLEDGE if one fits, or hand off. Never promise when it will be back. When a product says "only N left", you may mention it once, without pressure.
 TXT;
 
         $parts[] = <<<'TXT'

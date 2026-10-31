@@ -54,6 +54,9 @@ final class LangTest extends TestCase
         foreach (['open', 'reply', 'manual'] as $event) {
             $this->assertArrayHasKey('event_'.$event, $en);
         }
+        foreach (array_merge(array_keys(\NetArz\WhmcsAi\Brand::HOSTS), ['custom']) as $host) {
+            $this->assertArrayHasKey(\NetArz\WhmcsAi\Brand::hostLabel($host), $en);
+        }
         foreach (['chat', 'ticket', 'test'] as $channel) {
             $this->assertArrayHasKey('channel_'.$channel, $en);
         }

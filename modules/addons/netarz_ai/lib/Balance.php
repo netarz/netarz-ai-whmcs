@@ -3,19 +3,19 @@
 namespace NetArz\WhmcsAi;
 
 /**
- * The NetArz AI credit behind the API key: read from GET /me, cached for five
+ * The AI credit behind the API key: read from GET /me, cached for five
  * minutes, and used to pause the agent before it runs dry.
  */
 class Balance
 {
     public static function topupUrl(string $content = 'topup', string $medium = 'admin'): string
     {
-        return Links::to('/ai/topup', $content, $medium);
+        return Links::topup($content, $medium);
     }
 
     public static function panelUrl(string $content = 'panel', string $medium = 'admin'): string
     {
-        return Links::to('/ai', $content, $medium);
+        return Links::panel($content, $medium);
     }
 
     /**

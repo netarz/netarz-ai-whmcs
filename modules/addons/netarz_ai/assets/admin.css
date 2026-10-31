@@ -124,11 +124,11 @@
   display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px;
   font-size: 11.5px; font-weight: 700; background: #eef0f4; color: var(--ntz-ink-2); white-space: nowrap;
 }
-.ntz-pill.is-replied, .ntz-pill.is-answer, .ntz-pill.is-ai, .ntz-pill.is-auto, .ntz-pill.is-done { background: #e3f5ec; color: var(--ntz-ok); }
+.ntz-pill.is-replied, .ntz-pill.is-answer, .ntz-pill.is-ai, .ntz-pill.is-auto, .ntz-pill.is-done, .ntz-pill.is-rated-up { background: #e3f5ec; color: var(--ntz-ok); }
 .ntz-pill.is-drafted, .ntz-pill.is-draft, .ntz-pill.is-pending { background: #fff4d1; color: #8a6500; }
 .ntz-pill.is-handoff, .ntz-pill.is-waiting { background: #fde8e2; color: #b4461f; }
 .ntz-pill.is-human { background: #e6efff; color: #2754c5; }
-.ntz-pill.is-failed, .ntz-pill.is-error, .ntz-pill.is-off { background: #fdecec; color: var(--ntz-err); }
+.ntz-pill.is-failed, .ntz-pill.is-error, .ntz-pill.is-off, .ntz-pill.is-rated-down { background: #fdecec; color: var(--ntz-err); }
 .ntz-pill.is-skipped, .ntz-pill.is-closed, .ntz-pill.is-silent { background: #f0f0f0; color: #777; }
 
 /* buttons & inputs */

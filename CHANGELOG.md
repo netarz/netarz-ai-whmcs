@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.1.0 — 2026-10-31
+
+**Fixed**
+- Products sold out under WHMCS Stock Control were still offered with their order link. The assistant now sees them marked
+  OUT OF STOCK, with no price and no order link, and a hard rule tells it never to sell or link them, never to promise a
+  restock date, and to suggest an in-stock alternative instead. Add-ons of sold-out products are left out too. Reported by a
+  user on 2026-10-31.
+
+**Added**
+- *Out-of-stock products* setting: tell the assistant they are out of stock (default), or leave them out entirely.
+- "Only N left" for products with five or fewer in stock.
+- *Products the assistant never offers*: a list of product IDs kept out of the knowledge.
+- Product add-ons (shown on the order form) with prices and the products they belong to.
+- Prices in the signed-in client's own currency when the shop has prices in it.
+- Pending orders of the signed-in client in the client context ("where is my order?"); the order IP is never copied.
+- Suggested questions: up to four starter questions under the greeting, sent with one tap.
+- Chat ratings: "Did this chat help you?" after the first answer. A "no" adds a note to the conversation, raises its unread
+  count, and shows as a pill in the inbox; the dashboard shows 30-day satisfaction.
+- API address choice: gisoo.pro, ir.gisoo.pro (for servers in Iranian data centres) or a custom address. An address typed in
+  under 1.0 is kept.
+- The Gisoo edition (`gisoo-ai-whmcs-<version>.zip`, module `gisoo_ai`), built from the same source by `./build.sh gisoo` with
+  its own module name, namespace and tables, so both editions can be installed side by side. `./build.sh test-gisoo` runs the
+  whole suite against it.
+
+**Changed**
+- Every brand name, link and key prefix comes from one place (`Brand`), so the two editions never name each other.
+- 159 unit/integration tests (was 141) and 59 browser checks (was 50).
+
+
 ## 1.0.2 — 2026-09-27
 
 - The chat header under the assistant's name now says «دستیار هوش مصنوعی» / "AI assistant" instead of promising a reply time.

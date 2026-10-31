@@ -36,7 +36,7 @@ final class AgentAndBalanceTest extends TestCase
 
         $req = FakeGateway::chatRequests()[0];
         $this->assertSame('POST', $req['method']);
-        $this->assertSame('https://netarz.ir/api/ai/v1/chat/completions', $req['url']);
+        $this->assertSame(\NetArz\WhmcsAi\Brand::defaultApi().'/chat/completions', $req['url']);
         $this->assertContains('Authorization: Bearer sk-ntz-v1-testkey0123456789abcdef', $req['headers']);
         $this->assertStringStartsWith('User-Agent: NetArz-WHMCS/', implode("\n", array_filter($req['headers'], function ($h) { return strpos($h, 'User-Agent') === 0; })));
         $this->assertSame('gpt-4o-mini', $req['body']['model']);
@@ -153,7 +153,7 @@ final class AgentAndBalanceTest extends TestCase
         $this->assertNull(Balance::alertIfLow(), 'not twice on the same day');
         $this->assertCount(1, FakeWhmcs::$adminEmails);
         $this->assertStringContainsString('$1.50', FakeWhmcs::$adminEmails[0]['custommessage']);
-        $this->assertStringContainsString('netarz.ir/ai/topup?utm_source=whmcs-plugin&amp;utm_medium=email', FakeWhmcs::$adminEmails[0]['custommessage']);
+        $this->assertStringContainsString(\NetArz\WhmcsAi\Brand::site().\NetArz\WhmcsAi\Brand::get('topup').'?utm_source=whmcs-plugin&amp;utm_medium=email', FakeWhmcs::$adminEmails[0]['custommessage']);
     }
 
     public function test_no_alert_while_credit_is_healthy(): void
@@ -235,12 +235,12 @@ final class AgentAndBalanceTest extends TestCase
 
     public function test_links_back_to_netarz_are_tagged_for_attribution(): void
     {
-        $this->assertSame('https://netarz.ir/ai?utm_source=whmcs-plugin&utm_medium=admin&utm_campaign=netarz-ai-whmcs&utm_content=footer-panel', \NetArz\WhmcsAi\Links::to('/ai', 'footer-panel'));
+        $this->assertSame(\NetArz\WhmcsAi\Brand::site().\NetArz\WhmcsAi\Brand::get('panel').'?utm_source=whmcs-plugin&utm_medium=admin&utm_campaign='.\NetArz\WhmcsAi\Brand::get('campaign').'&utm_content=footer-panel', \NetArz\WhmcsAi\Links::panel('footer-panel'));
         $this->connect();
         $this->loginAdmin(1);
         $_GET = ['tab' => 'dashboard'];
         $html = (new \NetArz\WhmcsAi\Admin\Controller('addonmodules.php?module=netarz_ai'))->render();
-        $this->assertStringContainsString('ai/topup?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=dashboard', $html);
-        $this->assertDoesNotMatchRegularExpression('#href="https://netarz\.ir/[^"?]*"#', $html, 'every link back to netarz.ir carries UTM tags');
+        $this->assertStringContainsString(\NetArz\WhmcsAi\Brand::get('topup').'?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign='.\NetArz\WhmcsAi\Brand::get('campaign').'&amp;utm_content=dashboard', $html);
+        $this->assertDoesNotMatchRegularExpression('#href="'.preg_quote(\NetArz\WhmcsAi\Brand::site(), '#').'/[^"?]*"#', $html, 'every link back to the brand site carries UTM tags');
     }
 }

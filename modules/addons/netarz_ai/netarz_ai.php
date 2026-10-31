@@ -1,14 +1,16 @@
 <?php
 /**
- * NetArz AI for WHMCS — AI live chat, AI ticket replies and your NetArz AI
- * credit, inside WHMCS.
+ * NetArz AI for WHMCS — AI live chat, AI ticket replies and your AI credit,
+ * inside WHMCS. The Gisoo edition (gisoo_ai) is built from this file by build.sh.
  *
  * @see https://github.com/netarz/netarz-ai-whmcs
  * @license MIT
  */
 
 use NetArz\WhmcsAi\Admin\Controller;
+use NetArz\WhmcsAi\Brand;
 use NetArz\WhmcsAi\Lang;
+use NetArz\WhmcsAi\Links;
 use NetArz\WhmcsAi\PublicApi;
 use NetArz\WhmcsAi\Schema;
 use NetArz\WhmcsAi\Settings;
@@ -22,17 +24,19 @@ require_once __DIR__.'/autoload.php';
 
 function netarz_ai_config()
 {
+    $panel = Links::panel('addon-config');
+
     return [
-        'name' => 'NetArz AI',
-        'description' => 'AI live chat and AI ticket replies for WHMCS, powered by the NetArz AI API (GPT, Claude, Gemini, DeepSeek). Shows your NetArz AI credit on the dashboard. | چت آنلاین و پاسخ تیکت با هوش مصنوعی، با اعتبار وب‌سرویس هوش مصنوعی نِت اَرز.',
-        'author' => '<a href="https://netarz.ir/ai-api?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=addon-list" target="_blank" rel="noopener">NetArz</a>',
+        'name' => Brand::title(),
+        'description' => 'AI live chat and AI ticket replies for WHMCS, powered by the '.Brand::name('english').' AI API (GPT, Claude, Gemini, DeepSeek). Knows your products, stock, prices and each client\'s account; shows your AI credit on the dashboard. | چت آنلاین و پاسخ تیکت با هوش مصنوعی '.Brand::name('farsi').'.',
+        'author' => '<a href="'.htmlspecialchars(Links::landing('addon-list'), ENT_QUOTES).'" target="_blank" rel="noopener">'.Brand::name('english').'</a>',
         'language' => 'english',
         'version' => Schema::VERSION,
         'fields' => [
             'note' => [
                 'FriendlyName' => 'Setup',
                 'Type' => '',
-                'Description' => 'Open Addons → NetArz AI → Settings to enter your API key. Get a key at <a href="https://netarz.ir/ai?utm_source=whmcs-plugin&amp;utm_medium=admin&amp;utm_campaign=netarz-ai-whmcs&amp;utm_content=addon-config" target="_blank" rel="noopener">netarz.ir/ai</a>.',
+                'Description' => 'Open Addons → '.Brand::title().' → Settings to enter your API key. Get a key at <a href="'.htmlspecialchars($panel, ENT_QUOTES).'" target="_blank" rel="noopener">'.htmlspecialchars(Brand::panelText(), ENT_QUOTES).'</a>.',
             ],
         ],
     ];
@@ -52,9 +56,9 @@ function netarz_ai_activate()
             Settings::set('language', 'auto');
         }
 
-        return ['status' => 'success', 'description' => 'NetArz AI is active. Open Addons → NetArz AI → Settings and paste your NetArz API key.'];
+        return ['status' => 'success', 'description' => Brand::title().' is active. Open Addons → '.Brand::title().' → Settings and paste your API key.'];
     } catch (\Throwable $e) {
-        return ['status' => 'error', 'description' => 'Could not create the NetArz AI tables: '.$e->getMessage()];
+        return ['status' => 'error', 'description' => 'Could not create the '.Brand::title().' tables: '.$e->getMessage()];
     }
 }
 
@@ -63,7 +67,7 @@ function netarz_ai_deactivate()
     // Conversations, drafts and settings are kept on purpose: deactivating to
     // update or troubleshoot must not wipe the owner's chat history. The
     // "Remove all data" button in Settings drops the tables.
-    return ['status' => 'success', 'description' => 'NetArz AI is deactivated. Your settings and conversations are kept.'];
+    return ['status' => 'success', 'description' => Brand::title().' is deactivated. Your settings and conversations are kept.'];
 }
 
 function netarz_ai_upgrade($vars)

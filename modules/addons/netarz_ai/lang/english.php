@@ -7,7 +7,7 @@
 $_ADDONLANG['_language'] = 'english';
 
 /* module */
-$_ADDONLANG['module_title'] = 'NetArz AI';
+$_ADDONLANG['module_title'] = ':service AI';
 $_ADDONLANG['module_subtitle'] = 'AI live chat and ticket replies';
 $_ADDONLANG['default_agent_name'] = 'Support assistant';
 $_ADDONLANG['tab_dashboard'] = 'Dashboard';
@@ -17,17 +17,17 @@ $_ADDONLANG['tab_knowledge'] = 'Knowledge';
 $_ADDONLANG['tab_settings'] = 'Settings';
 $_ADDONLANG['tab_logs'] = 'Log';
 $_ADDONLANG['foot_docs'] = 'API docs';
-$_ADDONLANG['foot_panel'] = 'NetArz panel';
+$_ADDONLANG['foot_panel'] = ':service panel';
 
 /* setup */
-$_ADDONLANG['setup_title'] = 'Connect your NetArz API key';
-$_ADDONLANG['setup_text'] = 'The chat and the ticket replies run on your NetArz AI credit. Create a key in the NetArz panel, paste it in Settings, and the assistant starts working.';
+$_ADDONLANG['setup_title'] = 'Connect your :service API key';
+$_ADDONLANG['setup_text'] = 'The chat and the ticket replies run on your :service AI credit. Create a key in the :service panel, paste it in Settings, and the assistant starts working.';
 $_ADDONLANG['setup_get_key'] = 'Get an API key';
 $_ADDONLANG['setup_open_settings'] = 'Open settings';
 
 /* dashboard */
 $_ADDONLANG['dash_balance'] = 'AI credit';
-$_ADDONLANG['dash_toman'] = 'About :amount Toman';
+$_ADDONLANG['dash_toman'] = 'About :amount :money';
 $_ADDONLANG['dash_topup'] = 'Top up';
 $_ADDONLANG['dash_no_key'] = 'No API key yet.';
 $_ADDONLANG['dash_today'] = 'Spent today';
@@ -40,7 +40,7 @@ $_ADDONLANG['dash_tickets'] = 'Tickets handled this month';
 $_ADDONLANG['dash_ticket_mode'] = 'Ticket mode';
 $_ADDONLANG['dash_handoffs'] = ':n handed to your team';
 $_ADDONLANG['dash_chart'] = 'Spend, last 14 days';
-$_ADDONLANG['dash_chart_note'] = 'Estimated from token counts and public prices. The exact figure is in your NetArz panel.';
+$_ADDONLANG['dash_chart_note'] = 'Estimated from token counts and public prices. The exact figure is in your :service panel.';
 $_ADDONLANG['dash_recent'] = 'Latest ticket activity';
 $_ADDONLANG['dash_recent_empty'] = 'Nothing yet. New tickets show up here once the ticket mode is on.';
 $_ADDONLANG['dash_project'] = 'Project';
@@ -181,13 +181,13 @@ $_ADDONLANG['s_knowledge'] = 'Knowledge sources';
 $_ADDONLANG['s_money'] = 'Budget and data';
 $_ADDONLANG['save_settings'] = 'Save settings';
 $_ADDONLANG['settings_saved'] = 'Settings saved.';
-$_ADDONLANG['f_api_key'] = 'NetArz API key';
-$_ADDONLANG['f_api_key_hint'] = 'Starts with sk-ntz-. Stored encrypted. Create one in your NetArz panel:';
+$_ADDONLANG['f_api_key'] = ':service API key';
+$_ADDONLANG['f_api_key_hint'] = 'Starts with :key_prefix. Stored encrypted. Create one in your :service panel:';
 $_ADDONLANG['f_test'] = 'Test connection';
 $_ADDONLANG['f_model'] = 'Model';
-$_ADDONLANG['f_model_hint'] = 'Any chat model from the NetArz catalogue. gpt-4o-mini is fast and inexpensive for support.';
+$_ADDONLANG['f_model_hint'] = 'Any chat model from the :service catalogue. gpt-4o-mini is fast and inexpensive for support.';
 $_ADDONLANG['f_base_url'] = 'API address';
-$_ADDONLANG['f_base_url_hint'] = 'Leave as it is unless NetArz support asks you to change it.';
+$_ADDONLANG['f_base_url_hint'] = 'Leave as it is unless :service support asks you to change it.';
 $_ADDONLANG['f_temperature'] = 'Creativity';
 $_ADDONLANG['f_temperature_hint'] = 'Lower is more predictable. 0.2–0.4 suits support.';
 $_ADDONLANG['f_max_tokens'] = 'Longest reply (tokens)';
@@ -217,7 +217,7 @@ $_ADDONLANG['f_chat_guest_email'] = 'Ask visitors for name and email';
 $_ADDONLANG['f_chat_guest_email_hint'] = 'Needed to turn a guest chat into a ticket.';
 $_ADDONLANG['f_chat_alerts'] = 'Alert staff in the admin area';
 $_ADDONLANG['f_chat_alerts_hint'] = 'A small notice on every admin page when a visitor waits for a person.';
-$_ADDONLANG['f_chat_credit'] = 'Show "AI by NetArz"';
+$_ADDONLANG['f_chat_credit'] = 'Show "AI by :service"';
 $_ADDONLANG['f_chat_credit_hint'] = 'A small line under the chat box.';
 $_ADDONLANG['f_chat_position'] = 'Button position';
 $_ADDONLANG['pos_right'] = 'Bottom right';
@@ -264,7 +264,7 @@ $_ADDONLANG['f_kn_products'] = 'Products and prices';
 $_ADDONLANG['f_kn_domains'] = 'Domain prices';
 $_ADDONLANG['f_kn_network'] = 'Network issues';
 $_ADDONLANG['f_kn_client'] = 'The client\'s own account';
-$_ADDONLANG['f_kn_client_hint'] = 'Services, domains and unpaid invoices of the signed-in client. Passwords and credentials are never shared.';
+$_ADDONLANG['f_kn_client_hint'] = 'Services, domains, pending orders and unpaid invoices of the signed-in client. Passwords and credentials are never shared.';
 $_ADDONLANG['f_kn_custom_where'] = 'Your own notes are edited under';
 $_ADDONLANG['f_budget'] = 'Daily spending cap (USD)';
 $_ADDONLANG['f_budget_hint'] = '0 = no cap. When reached, the AI steps aside until tomorrow.';
@@ -280,40 +280,40 @@ $_ADDONLANG['danger_button'] = 'Remove everything';
 
 /* logs */
 $_ADDONLANG['logs_title'] = 'Request log';
-$_ADDONLANG['logs_intro'] = 'The last 200 requests to the NetArz API. The request ID matches the one in your NetArz panel.';
+$_ADDONLANG['logs_intro'] = 'The last 200 requests to the :service API. The request ID matches the one in your :service panel.';
 $_ADDONLANG['logs_empty'] = 'No requests yet.';
 $_ADDONLANG['channel_chat'] = 'Chat';
 $_ADDONLANG['channel_ticket'] = 'Ticket';
 $_ADDONLANG['channel_test'] = 'Test';
 
 /* widget */
-$_ADDONLANG['widget_no_key'] = 'Connect a NetArz API key to see your AI credit here.';
+$_ADDONLANG['widget_no_key'] = 'Connect a :service API key to see your AI credit here.';
 $_ADDONLANG['widget_calls'] = 'Requests today';
 $_ADDONLANG['widget_waiting'] = 'Chats waiting';
-$_ADDONLANG['widget_open'] = 'Open NetArz AI';
+$_ADDONLANG['widget_open'] = 'Open :service AI';
 
 /* errors */
-$_ADDONLANG['err_no_key'] = 'No NetArz API key is set.';
-$_ADDONLANG['err_api_key_format'] = 'That does not look like a NetArz API key. It starts with sk-ntz-.';
+$_ADDONLANG['err_no_key'] = 'No :service API key is set.';
+$_ADDONLANG['err_api_key_format'] = 'That does not look like a :service API key. It starts with :key_prefix.';
 $_ADDONLANG['err_base_url'] = 'The API address must start with https://';
 $_ADDONLANG['err_color'] = 'Colours must look like #ffc700.';
-$_ADDONLANG['err_network'] = 'Could not reach the NetArz API.';
-$_ADDONLANG['err_http'] = 'The NetArz API answered with status';
+$_ADDONLANG['err_network'] = 'Could not reach the :service API.';
+$_ADDONLANG['err_http'] = 'The :service API answered with status';
 $_ADDONLANG['err_budget'] = 'Today\'s spending cap is reached.';
-$_ADDONLANG['err_low_balance'] = 'Your NetArz AI credit is below the minimum you set.';
+$_ADDONLANG['err_low_balance'] = 'Your :service AI credit is below the minimum you set.';
 $_ADDONLANG['err_csrf'] = 'Your session expired. Reload the page and try again.';
 $_ADDONLANG['err_empty_question'] = 'Write a question first.';
 $_ADDONLANG['err_generic'] = 'Something went wrong. Please try again.';
 
 /* alerts */
-$_ADDONLANG['alert_subject'] = 'NetArz AI: your AI credit needs attention';
-$_ADDONLANG['alert_low_body'] = "Your NetArz AI credit is :balance. Below :min the assistant stops answering and your team takes over.\n\nTop up here: :url";
-$_ADDONLANG['alert_broken_body'] = "The NetArz API refused the key: :error\n\nCheck the key in your NetArz panel: :url";
+$_ADDONLANG['alert_subject'] = ':service AI: your AI credit needs attention';
+$_ADDONLANG['alert_low_body'] = "Your :service AI credit is :balance. Below :min the assistant stops answering and your team takes over.\n\nTop up here: :url";
+$_ADDONLANG['alert_broken_body'] = "The :service API refused the key: :error\n\nCheck the key in your :service panel: :url";
 $_ADDONLANG['alert_toast_title'] = 'A visitor is waiting';
 $_ADDONLANG['alert_toast_open'] = 'open the chat';
 
 /* notes written into WHMCS */
-$_ADDONLANG['note_handoff'] = "NetArz AI: a person should answer this ticket.\nReason: :reason (confidence :confidence%)";
+$_ADDONLANG['note_handoff'] = ":service AI: a person should answer this ticket.\nReason: :reason (confidence :confidence%)";
 $_ADDONLANG['note_draft_follows'] = 'Suggested reply:';
 $_ADDONLANG['attachment_note'] = 'attachments';
 
@@ -351,7 +351,7 @@ $_ADDONLANG['w_login'] = 'Sign in';
 $_ADDONLANG['w_offer_ticket'] = 'Nobody is free right now. Turn this chat into a ticket and we will answer you by email.';
 $_ADDONLANG['w_make_ticket'] = 'Open a ticket';
 $_ADDONLANG['w_view_ticket'] = 'View the ticket';
-$_ADDONLANG['w_credit'] = 'AI by NetArz';
+$_ADDONLANG['w_credit'] = 'AI by :service';
 $_ADDONLANG['w_err_generic'] = 'Something went wrong. Please try again.';
 $_ADDONLANG['w_err_too_long'] = 'This message is too long.';
 $_ADDONLANG['w_err_empty'] = 'Write something first.';
@@ -379,3 +379,37 @@ $_ADDONLANG['reason_handoff'] = 'Needs a person';
 $_ADDONLANG['reason_malformed_output'] = 'The model answered in the wrong format';
 $_ADDONLANG['reason_empty_reply'] = 'The model gave an empty answer';
 $_ADDONLANG['reason_model_chose_silence'] = 'The model had nothing to say';
+
+// 1.1.0
+$_ADDONLANG['f_api_host'] = 'API address';
+$_ADDONLANG['f_api_host_hint'] = 'Same key, credit and models on every address. If your WHMCS server is in an Iranian data centre, choose the Iran address.';
+$_ADDONLANG['host_main'] = 'gisoo.pro (main)';
+$_ADDONLANG['host_iran'] = 'ir.gisoo.pro (for servers in Iran)';
+$_ADDONLANG['host_legacy'] = 'netarz.ir';
+$_ADDONLANG['host_custom'] = 'Another address…';
+$_ADDONLANG['f_base_url_custom'] = 'Custom API address';
+$_ADDONLANG['f_base_url_custom_hint'] = 'Only used when "Another address" is chosen above.';
+$_ADDONLANG['f_kn_stock'] = 'Out-of-stock products';
+$_ADDONLANG['f_kn_stock_hint'] = 'Follows WHMCS stock control (Products → Other → Stock Control). The assistant never offers or links a product with no stock left.';
+$_ADDONLANG['stock_mark'] = 'Tell the assistant they are out of stock';
+$_ADDONLANG['stock_hide'] = 'Leave them out entirely';
+$_ADDONLANG['f_kn_addons'] = 'Product add-ons';
+$_ADDONLANG['f_kn_exclude'] = 'Products the assistant never offers';
+$_ADDONLANG['f_kn_exclude_hint'] = 'Product IDs separated by commas, for example 12, 15. Useful for plans that are visible but sold only by your team.';
+$_ADDONLANG['f_chat_suggestions'] = 'Suggested questions';
+$_ADDONLANG['f_chat_suggestions_hint'] = 'Up to four, one per line. Shown under the greeting; a visitor clicks one to send that question.';
+$_ADDONLANG['f_chat_rating'] = 'Ask visitors to rate the chat';
+$_ADDONLANG['f_chat_rating_hint'] = 'After the first answer: "Did this help?" A "no" is flagged in the inbox.';
+$_ADDONLANG['dash_satisfaction'] = 'Chat satisfaction (30 days)';
+$_ADDONLANG['dash_satisfaction_none'] = 'No ratings yet';
+$_ADDONLANG['dash_rated'] = ':up helpful · :down not helpful · :rated of :total chats rated';
+$_ADDONLANG['inbox_rated_up'] = 'Rated helpful';
+$_ADDONLANG['inbox_rated_down'] = 'Rated not helpful';
+$_ADDONLANG['chat_rated_down'] = 'Sorry my answer did not help. A colleague will see this chat; if you still have a question, write it here.';
+$_ADDONLANG['w_suggestions'] = 'Suggested questions';
+$_ADDONLANG['w_rate_question'] = 'Did this chat help you?';
+$_ADDONLANG['w_rate_yes'] = 'Yes';
+$_ADDONLANG['w_rate_no'] = 'No';
+$_ADDONLANG['w_rate_thanks'] = 'Thank you for letting us know.';
+$_ADDONLANG['w_rate_sorry'] = 'Your feedback has been recorded.';
+$_ADDONLANG['w_err_cannot_rate'] = 'This chat has already been rated.';

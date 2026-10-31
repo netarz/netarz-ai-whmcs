@@ -1,5 +1,10 @@
 <?php
 $s = $settings;
+if (! in_array($s['api_host'], array_merge(array_keys(\NetArz\WhmcsAi\Brand::hosts()), ['custom']), true)) {
+    // Show what an install that never chose is actually using.
+    $legacy = rtrim(trim((string) $s['base_url']), '/');
+    $s['api_host'] = $legacy !== '' && $legacy !== \NetArz\WhmcsAi\Settings::DEFAULT_BASE_URL ? 'custom' : \NetArz\WhmcsAi\Brand::defaultHost();
+}
 $switch = function (string $key, string $label, string $hint = '') use ($s, $t) {
     $id = 'ntz-'.$key;
 
@@ -55,10 +60,10 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
             <div class="ntz-field">
                 <label class="ntz-label" for="ntz-api_key"><?= $t('f_api_key') ?></label>
                 <div class="ntz-row is-tight">
-                    <input class="ntz-input" type="password" id="ntz-api_key" name="api_key" value="<?= $e($maskedKey) ?>" placeholder="sk-ntz-v1-…" dir="ltr" autocomplete="new-password" spellcheck="false">
+                    <input class="ntz-input" type="password" id="ntz-api_key" name="api_key" value="<?= $e($maskedKey) ?>" placeholder="<?= $e(\NetArz\WhmcsAi\Brand::get('key_prefix')) ?>…" dir="ltr" autocomplete="new-password" spellcheck="false">
                     <button type="button" class="ntz-btn" data-action="test-connection"><?= $icon('shield-check', 15) ?> <?= $t('f_test') ?></button>
                 </div>
-                <small class="ntz-hint"><?= $t('f_api_key_hint') ?> <a href="<?= $e(\NetArz\WhmcsAi\Links::to('/ai', 'settings-key')) ?>" target="_blank" rel="noopener">netarz.ir/ai</a></small>
+                <small class="ntz-hint"><?= $t('f_api_key_hint') ?> <a href="<?= $e(\NetArz\WhmcsAi\Links::panel('settings-key')) ?>" target="_blank" rel="noopener" dir="ltr"><?= $e(\NetArz\WhmcsAi\Brand::panelText()) ?></a></small>
                 <div class="ntz-test-result" data-test-result hidden></div>
             </div>
             <div class="ntz-grid ntz-grid-2 is-flat">
@@ -68,7 +73,15 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
                     <datalist id="ntz-models"></datalist>
                     <small class="ntz-hint" data-model-price><?= $t('f_model_hint') ?></small>
                 </div>
-                <?= $field('base_url', 'f_base_url', 'f_base_url_hint', 'url', ['dir' => 'ltr']) ?>
+                <?php
+                $hostOptions = [];
+                foreach (\NetArz\WhmcsAi\Brand::hosts() as $hostKey => $hostUrl) {
+                    $hostOptions[$hostKey] = $L(\NetArz\WhmcsAi\Brand::hostLabel($hostKey));
+                }
+                $hostOptions['custom'] = $L('host_custom');
+                ?>
+                <?= $select('api_host', 'f_api_host', $hostOptions, 'f_api_host_hint') ?>
+                <?= $field('base_url', 'f_base_url_custom', 'f_base_url_custom_hint', 'url', ['dir' => 'ltr', 'placeholder' => \NetArz\WhmcsAi\Brand::defaultApi()]) ?>
                 <?= $field('temperature', 'f_temperature', 'f_temperature_hint', 'number', ['min' => '0', 'max' => '1.5', 'step' => '0.1']) ?>
                 <?= $field('max_tokens', 'f_max_tokens', 'f_max_tokens_hint', 'number', ['min' => '100', 'max' => '4000', 'step' => '50']) ?>
             </div>
@@ -94,6 +107,7 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
                 <?= $switch('chat_guest_email', 'f_chat_guest_email', 'f_chat_guest_email_hint') ?>
                 <?= $switch('chat_admin_alerts', 'f_chat_alerts', 'f_chat_alerts_hint') ?>
                 <?= $switch('chat_credit', 'f_chat_credit', 'f_chat_credit_hint') ?>
+                <?= $switch('chat_rating', 'f_chat_rating', 'f_chat_rating_hint') ?>
             </div>
             <div class="ntz-grid ntz-grid-3 is-flat">
                 <?= $select('chat_position', 'f_chat_position', ['right' => $L('pos_right'), 'left' => $L('pos_left')]) ?>
@@ -106,6 +120,7 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
                 <?= $field('chat_history_turns', 'f_chat_history', 'f_chat_history_hint', 'number', ['min' => '2', 'max' => '60']) ?>
             </div>
             <?= $textarea('chat_greeting', 'f_chat_greeting', 'f_chat_greeting_hint', 2) ?>
+            <?= $textarea('chat_suggestions', 'f_chat_suggestions', 'f_chat_suggestions_hint', 4) ?>
             <?= $textarea('chat_hide_paths', 'f_chat_hide', 'f_chat_hide_hint', 3) ?>
         </fieldset>
 
@@ -152,9 +167,14 @@ $selectedDepts = array_filter(array_map('intval', explode(',', (string) $s['tick
                 <?= $switch('knowledge_kb', 'f_kn_kb') ?>
                 <?= $switch('knowledge_announcements', 'f_kn_ann') ?>
                 <?= $switch('knowledge_products', 'f_kn_products') ?>
+                <?= $switch('knowledge_addons', 'f_kn_addons') ?>
                 <?= $switch('knowledge_domains', 'f_kn_domains') ?>
                 <?= $switch('knowledge_network', 'f_kn_network') ?>
                 <?= $switch('knowledge_client', 'f_kn_client', 'f_kn_client_hint') ?>
+            </div>
+            <div class="ntz-grid ntz-grid-2 is-flat">
+                <?= $select('knowledge_stock', 'f_kn_stock', ['mark' => $L('stock_mark'), 'hide' => $L('stock_hide')], 'f_kn_stock_hint') ?>
+                <?= $field('knowledge_exclude', 'f_kn_exclude', 'f_kn_exclude_hint', 'text', ['dir' => 'ltr', 'inputmode' => 'numeric', 'placeholder' => '12, 15']) ?>
             </div>
             <p class="ntz-muted ntz-small"><?= $t('f_kn_custom_where') ?> <a href="<?= $e($link) ?>&amp;tab=knowledge"><?= $t('tab_knowledge') ?></a></p>
         </fieldset>

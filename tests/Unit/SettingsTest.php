@@ -31,7 +31,7 @@ final class SettingsTest extends TestCase
         $this->assertSame(700, Settings::get('max_tokens'));
         $this->assertTrue(Settings::bool('chat_enabled'));
         $this->assertSame('draft', Settings::get('ticket_mode'), 'a fresh install never answers customers on its own');
-        $this->assertSame('https://netarz.ir/api/ai/v1', Settings::baseUrl());
+        $this->assertSame(\NetArz\WhmcsAi\Brand::defaultApi(), Settings::baseUrl());
     }
 
     public function test_api_key_is_stored_encrypted_and_read_back(): void

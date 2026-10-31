@@ -65,6 +65,7 @@ class Controller
                 $data['daily'] = Usage::daily(14);
                 $data['recentJobs'] = Tickets::recent(8);
                 $data['openChats'] = count(Chat::adminList('open', 200));
+                $data['satisfaction'] = Chat::satisfaction(Clock::now(-30 * 86400));
                 break;
             case 'tickets':
                 $data['jobs'] = Tickets::recent(80, isset($_GET['outcome']) ? preg_replace('/[^a-z_]/', '', (string) $_GET['outcome']) : '');

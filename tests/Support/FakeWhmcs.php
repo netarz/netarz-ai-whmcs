@@ -44,7 +44,7 @@ final class FakeWhmcs
     public static function schema(): void
     {
         $s = Capsule::schema();
-        foreach (['tblconfiguration', 'tbladmins', 'tblticketdepartments', 'tblknowledgebase', 'tblknowledgebasecats', 'tblknowledgebaselinks', 'tblannouncements', 'tblproducts', 'tblproductgroups', 'tblpricing', 'tblcurrencies', 'tbldomainpricing', 'tblnetworkissues', 'tbltickets', 'tblticketreplies', 'tblticketnotes', 'tblclients', 'tblhosting', 'tbldomains', 'tblinvoices'] as $t) {
+        foreach (['tblconfiguration', 'tbladmins', 'tblticketdepartments', 'tblknowledgebase', 'tblknowledgebasecats', 'tblknowledgebaselinks', 'tblannouncements', 'tblproducts', 'tblproductgroups', 'tblpricing', 'tblcurrencies', 'tbldomainpricing', 'tblnetworkissues', 'tbltickets', 'tblticketreplies', 'tblticketnotes', 'tblclients', 'tblhosting', 'tbldomains', 'tblinvoices', 'tbladdons', 'tblorders'] as $t) {
             $s->dropIfExists($t);
         }
 
@@ -68,6 +68,15 @@ final class FakeWhmcs
         $s->create('tblproducts', function (Blueprint $t) {
             $t->increments('id'); $t->integer('gid'); $t->string('name'); $t->text('description')->nullable(); $t->string('paytype')->default('recurring');
             $t->boolean('hidden')->default(false); $t->boolean('retired')->default(false); $t->integer('order')->default(0);
+            $t->boolean('stockcontrol')->default(false); $t->integer('qty')->default(0);
+        });
+        $s->create('tbladdons', function (Blueprint $t) {
+            $t->increments('id'); $t->text('packages'); $t->string('name'); $t->text('description')->nullable(); $t->string('billingcycle')->default('recurring');
+            $t->boolean('showorder')->default(true); $t->boolean('hidden')->default(false); $t->boolean('retired')->default(false);
+        });
+        $s->create('tblorders', function (Blueprint $t) {
+            $t->increments('id'); $t->integer('userid'); $t->dateTime('date'); $t->decimal('amount', 10, 2)->default(0); $t->string('status')->default('Pending');
+            $t->string('paymentstatus')->default('Unpaid');
         });
         $s->create('tblcurrencies', function (Blueprint $t) { $t->increments('id'); $t->string('code'); $t->string('prefix')->default(''); $t->string('suffix')->default(''); $t->boolean('default')->default(false); });
         $s->create('tblpricing', function (Blueprint $t) {
@@ -84,6 +93,7 @@ final class FakeWhmcs
         $s->create('tblclients', function (Blueprint $t) {
             $t->increments('id'); $t->string('firstname'); $t->string('lastname'); $t->string('companyname')->default(''); $t->string('email');
             $t->string('status')->default('Active'); $t->decimal('credit', 10, 2)->default(0); $t->string('password')->default('secret-hash');
+            $t->integer('currency')->default(0);
         });
         $s->create('tblhosting', function (Blueprint $t) {
             $t->increments('id'); $t->integer('userid'); $t->integer('packageid'); $t->string('domain')->default(''); $t->string('domainstatus')->default('Active');
@@ -151,11 +161,23 @@ final class FakeWhmcs
             ['gid' => 2, 'name' => 'VPS Frankfurt 2GB', 'description' => '2 vCPU, 2 GB RAM', 'order' => 1],
             ['gid' => 1, 'name' => 'Legacy plan', 'description' => 'old', 'retired' => 1, 'order' => 9],
             ['gid' => 3, 'name' => 'Secret plan', 'description' => 'hidden', 'order' => 1],
+            ['gid' => 2, 'name' => 'VPS Amsterdam 4GB', 'description' => '4 vCPU, 4 GB RAM', 'order' => 2, 'stockcontrol' => 1, 'qty' => 0],
+            ['gid' => 1, 'name' => 'Pro', 'description' => '100 GB NVMe, daily backups', 'order' => 3, 'stockcontrol' => 1, 'qty' => 3],
+        ]);
+        self::rows('tbladdons', [
+            ['packages' => '1,2', 'name' => 'Daily backup', 'description' => 'Off-site copy every night', 'billingcycle' => 'recurring'],
+            ['packages' => '6', 'name' => 'Extra IPv4', 'description' => 'For the sold-out VPS only', 'billingcycle' => 'recurring'],
+            ['packages' => '1', 'name' => 'Old addon', 'description' => 'retired', 'retired' => 1],
         ]);
         self::rows('tblpricing', [
             ['type' => 'product', 'currency' => 1, 'relid' => 1, 'monthly' => 5, 'annually' => 50, 'msetupfee' => 0, 'asetupfee' => 0],
             ['type' => 'product', 'currency' => 1, 'relid' => 2, 'monthly' => 15, 'annually' => 150, 'msetupfee' => 0, 'asetupfee' => 0],
             ['type' => 'product', 'currency' => 1, 'relid' => 3, 'monthly' => 12, 'msetupfee' => 10],
+            ['type' => 'product', 'currency' => 1, 'relid' => 6, 'monthly' => 20, 'msetupfee' => 0],
+            ['type' => 'product', 'currency' => 1, 'relid' => 7, 'monthly' => 25, 'msetupfee' => 0],
+            ['type' => 'product', 'currency' => 2, 'relid' => 1, 'monthly' => 500000, 'msetupfee' => 0],
+            ['type' => 'addon', 'currency' => 1, 'relid' => 1, 'monthly' => 2, 'msetupfee' => 0],
+            ['type' => 'addon', 'currency' => 1, 'relid' => 2, 'monthly' => 3, 'msetupfee' => 0],
         ]);
         self::rows('tbldomainpricing', [['extension' => '.com', 'order' => 1], ['extension' => '.ir', 'order' => 2]]);
         self::rows('tblpricing', [
@@ -169,10 +191,14 @@ final class FakeWhmcs
         ]);
         self::rows('tblclients', [
             ['firstname' => 'Reza', 'lastname' => 'Karimi', 'email' => 'reza@example.com', 'credit' => 3.5],
-            ['firstname' => 'Mina', 'lastname' => 'Rahimi', 'email' => 'mina@example.com'],
+            ['firstname' => 'Mina', 'lastname' => 'Rahimi', 'email' => 'mina@example.com', 'currency' => 2],
         ]);
         self::rows('tblhosting', [
             ['userid' => 1, 'packageid' => 1, 'domain' => 'rezashop.test', 'amount' => 5, 'nextduedate' => '2026-10-10', 'regdate' => '2025-10-10', 'username' => 'rezashop', 'password' => 'P@ssw0rd-SECRET', 'dedicatedip' => '10.0.0.7'],
+        ]);
+        self::rows('tblorders', [
+            ['userid' => 1, 'date' => '2026-10-30 09:00:00', 'amount' => 25, 'status' => 'Pending', 'paymentstatus' => 'Paid'],
+            ['userid' => 1, 'date' => '2026-09-01 09:00:00', 'amount' => 5, 'status' => 'Active', 'paymentstatus' => 'Paid'],
         ]);
         self::rows('tbldomains', [['userid' => 1, 'domain' => 'rezashop.test', 'expirydate' => '2026-12-01', 'donotrenew' => 0]]);
         self::rows('tblinvoices', [
@@ -252,6 +278,17 @@ final class FakeWhmcs
                 }, $q->get()->all());
 
                 return ['result' => 'success', 'totalresults' => count($list), 'invoices' => ['invoice' => $list]];
+
+            case 'GetOrders':
+                $q = Capsule::table('tblorders')->where('userid', (int) $params['userid']);
+                if (! empty($params['status'])) {
+                    $q->where('status', $params['status']);
+                }
+                $list = array_map(function ($o) {
+                    return ['id' => $o->id, 'date' => $o->date, 'amount' => $o->amount, 'status' => $o->status, 'paymentstatus' => $o->paymentstatus, 'ipaddress' => '203.0.113.9'];
+                }, $q->get()->all());
+
+                return ['result' => 'success', 'totalresults' => count($list), 'orders' => ['order' => $list]];
 
             case 'OpenTicket':
                 $client = ! empty($params['clientid']) ? Capsule::table('tblclients')->find((int) $params['clientid']) : null;

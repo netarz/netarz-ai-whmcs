@@ -13,13 +13,15 @@ class Settings
 {
     public const TABLE = 'mod_netarz_ai_settings';
 
-    public const DEFAULT_BASE_URL = 'https://netarz.ir/api/ai/v1';
+    /** The address 1.0 shipped with; a base_url equal to it is not a custom choice. */
+    public const DEFAULT_BASE_URL = Brand::LEGACY_API;
 
     /** @var array<string, string|int|float> */
     public const DEFAULTS = [
         // connection
         'api_key' => '',
-        'base_url' => self::DEFAULT_BASE_URL,
+        'api_host' => '',              // '' = the edition's default | gisoo | iran | netarz | custom
+        'base_url' => '',              // only used when api_host = custom
         'model' => 'gpt-4o-mini',
         'temperature' => 0.3,
         'max_tokens' => 700,
@@ -48,6 +50,8 @@ class Settings
         'chat_admin_alerts' => 1,
         'chat_hide_paths' => '',       // one path per line, e.g. /cart.php?a=checkout
         'chat_credit' => 1,            // small "AI by NetArz" line under the composer
+        'chat_suggestions' => '',      // up to four starter questions, one per line
+        'chat_rating' => 1,            // ask the visitor to rate the conversation
 
         // tickets
         'ticket_mode' => 'draft',      // off | draft | auto
@@ -67,6 +71,9 @@ class Settings
         'knowledge_kb' => 1,
         'knowledge_announcements' => 1,
         'knowledge_products' => 1,
+        'knowledge_stock' => 'mark',   // mark | hide — what to do with products WHMCS shows as out of stock
+        'knowledge_addons' => 1,
+        'knowledge_exclude' => '',     // product ids the assistant never offers, comma separated
         'knowledge_domains' => 1,
         'knowledge_network' => 1,
         'knowledge_client' => 1,
@@ -118,11 +125,51 @@ class Settings
         return trim(Whmcs::decrypt((string) self::get('api_key')));
     }
 
+    /**
+     * The API address: one of the edition's addresses, or a custom one. An install
+     * that predates the choice and typed its own address keeps it.
+     */
     public static function baseUrl(): string
     {
-        $url = trim((string) self::get('base_url'));
+        $choice = self::apiHost();
+        $hosts = Brand::hosts();
+        $custom = rtrim(trim((string) self::get('base_url')), '/');
 
-        return rtrim($url !== '' ? $url : self::DEFAULT_BASE_URL, '/');
+        if ($choice === 'custom') {
+            return $custom !== '' ? $custom : Brand::defaultApi();
+        }
+        if ($choice !== '' && isset($hosts[$choice])) {
+            return $hosts[$choice];
+        }
+        if ($custom !== '' && $custom !== self::DEFAULT_BASE_URL) {
+            return $custom;
+        }
+
+        return Brand::defaultApi();
+    }
+
+    /** The address choice as saved, '' when the owner never picked one. */
+    public static function apiHost(): string
+    {
+        return (string) self::get('api_host');
+    }
+
+    /** @return int[] products the assistant must never offer */
+    public static function excludedProducts(): array
+    {
+        $ids = array_filter(array_map('intval', preg_split('/[^0-9]+/', (string) self::get('knowledge_exclude'))));
+
+        return array_values(array_unique($ids));
+    }
+
+    /** @return string[] starter questions for the chat widget, at most four */
+    public static function chatSuggestions(): array
+    {
+        $lines = array_filter(array_map(function ($line) {
+            return Text::limit(trim($line), 80);
+        }, preg_split('/\R/', (string) self::get('chat_suggestions'))), 'strlen');
+
+        return array_slice(array_values(array_unique($lines)), 0, 4);
     }
 
     public static function agentName(): string
@@ -249,9 +296,9 @@ class Settings
     public static function isSwitch(string $key): bool
     {
         return in_array($key, [
-            'chat_enabled', 'chat_ai_enabled', 'chat_guests', 'chat_guest_email', 'chat_admin_alerts', 'chat_credit',
+            'chat_enabled', 'chat_ai_enabled', 'chat_guests', 'chat_guest_email', 'chat_admin_alerts', 'chat_credit', 'chat_rating',
             'ticket_instant', 'ticket_note_handoff', 'ticket_skip_human',
-            'knowledge_kb', 'knowledge_announcements', 'knowledge_products', 'knowledge_domains',
+            'knowledge_kb', 'knowledge_announcements', 'knowledge_products', 'knowledge_addons', 'knowledge_domains',
             'knowledge_network', 'knowledge_client', 'balance_alerts',
         ], true);
     }
@@ -264,6 +311,8 @@ class Settings
             'chat_position' => ['right', 'left'],
             'ticket_mode' => ['off', 'draft', 'auto'],
             'ticket_status_after' => ['', 'Answered', 'Open', 'In Progress', 'On Hold'],
+            'knowledge_stock' => ['mark', 'hide'],
+            'api_host' => array_merge([''], array_keys(Brand::hosts()), ['custom']),
         ];
         if (isset($enums[$key])) {
             return in_array($value, $enums[$key], true) ? $value : self::DEFAULTS[$key];
@@ -290,7 +339,13 @@ class Settings
             return max($ranges[$key][0], min($ranges[$key][1], $number));
         }
 
-        $limits = ['instructions' => 6000, 'knowledge_custom' => 60000, 'ticket_signature' => 500, 'chat_greeting' => 500, 'chat_hide_paths' => 2000];
+        if ($key === 'knowledge_exclude') {
+            preg_match_all('/\d+/', $value, $m);
+
+            return implode(',', array_unique(array_map('intval', $m[0])));
+        }
+
+        $limits = ['chat_suggestions' => 600, 'instructions' => 6000, 'knowledge_custom' => 60000, 'ticket_signature' => 500, 'chat_greeting' => 500, 'chat_hide_paths' => 2000];
 
         return mb_substr($value, 0, $limits[$key] ?? 255);
     }

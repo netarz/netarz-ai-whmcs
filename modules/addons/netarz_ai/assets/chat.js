@@ -24,7 +24,9 @@
     "arrow-up-right": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 7h10v10M7 17L17 7\"/>",
     "sparkles": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594zM20 2v4m2-2h-4\"/><circle cx=\"4\" cy=\"20\" r=\"2\"/></g>",
     "user": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></g>",
-    "chevron-down": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m6 9l6 6l6-6\"/>"
+    "chevron-down": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m6 9l6 6l6-6\"/>",
+    "thumbs-up": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M7 10v12\"/><path d=\"M15 5.88L14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88\"/></g>",
+    "thumbs-down": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M17 14V2\"/><path d=\"M9 18.12L10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88\"/></g>"
   };
 
   var cfg = null;
@@ -39,6 +41,7 @@
   var sending = 0;
   var seenByAdmin = 0;
   var state = null;
+  var justRated = false;
   var els = {};
 
   /* ------------------------------------------------------------ helpers */
@@ -123,6 +126,7 @@
           '<ol class="ntzc-list" aria-live="polite" aria-relevant="additions"></ol>' +
           '<div class="ntzc-typing" hidden><span></span><span></span><span></span></div>' +
           '<div class="ntzc-offer" hidden></div>' +
+          '<div class="ntzc-rate" hidden></div>' +
         '</div>' +
         '<form class="ntzc-identity" hidden novalidate>' +
           '<p class="ntzc-identity-lead"></p>' +
@@ -153,6 +157,7 @@
     els.list = root.querySelector('.ntzc-list');
     els.typing = root.querySelector('.ntzc-typing');
     els.offer = root.querySelector('.ntzc-offer');
+    els.rate = root.querySelector('.ntzc-rate');
     els.identity = root.querySelector('.ntzc-identity');
     els.composer = root.querySelector('.ntzc-composer');
     els.textarea = root.querySelector('.ntzc-textarea');
@@ -178,9 +183,29 @@
     greet.appendChild(hello);
     els.intro.appendChild(greet);
 
+    // Starter questions: one tap sends the question, and they go away once the conversation has begun.
+    if (cfg.suggestions && cfg.suggestions.length) {
+      var chips = el('div', 'ntzc-suggest');
+      chips.setAttribute('role', 'group');
+      chips.setAttribute('aria-label', S.suggestions);
+      cfg.suggestions.forEach(function (text) {
+        var b = el('button', 'ntzc-chip', text);
+        b.type = 'button';
+        b.dir = 'auto';
+        b.addEventListener('click', function () {
+          if (cfg.login_required || !els.composer || els.composer.hidden) return;
+          els.textarea.value = text;
+          submit();
+        });
+        chips.appendChild(b);
+      });
+      els.suggest = chips;
+      els.intro.appendChild(chips);
+    }
+
     if (cfg.credit) {
       var credit = el('a', null, S.credit);
-      credit.href = 'https://netarz.ir/ai-api?utm_source=whmcs-plugin&utm_medium=chat-widget&utm_campaign=netarz-ai-whmcs';
+      credit.href = cfg.credit_url;
       credit.target = '_blank';
       credit.rel = 'noopener';
       els.foot.appendChild(credit);
@@ -324,6 +349,48 @@
       paintSeen();
     }
     paintOffer();
+    paintRate();
+  }
+
+  function paintRate() {
+    var box = els.rate;
+    var rating = state && typeof state.rating === 'number' ? state.rating : null;
+    // Ask while it may be asked; thank only right after the click, not on every later page load.
+    var show = state && (rating === null ? !!state.can_rate : justRated);
+    if (!show) { box.hidden = true; box.removeAttribute('data-for'); return; }
+    var key = rating === null ? 'ask' : String(rating);
+    if (box.getAttribute('data-for') === key) return;
+    box.setAttribute('data-for', key);
+    box.innerHTML = '';
+    box.hidden = false;
+    if (rating !== null) {
+      box.appendChild(el('p', 'ntzc-rate-done', rating > 0 ? S.rate_thanks : S.rate_sorry));
+      return;
+    }
+    box.appendChild(el('p', null, S.rate_question));
+    var row = el('div', 'ntzc-rate-row');
+    [[1, 'thumbs-up', S.rate_yes], [-1, 'thumbs-down', S.rate_no]].forEach(function (opt) {
+      var b = el('button', 'ntzc-rate-btn');
+      b.type = 'button';
+      b.innerHTML = icon(opt[1], 16);
+      b.appendChild(document.createTextNode(' ' + opt[2]));
+      b.addEventListener('click', function () {
+        var all = row.querySelectorAll('button');
+        for (var i = 0; i < all.length; i++) all[i].disabled = true;
+        api('rate', { rating: opt[0] }).then(function (r) {
+          if (!r.ok) {
+            for (var i = 0; i < all.length; i++) all[i].disabled = false;
+            showError(r.message || S.err_generic);
+            return;
+          }
+          justRated = true;
+          setState(r.state);
+          if (opt[0] < 0) poll();
+        });
+      });
+      row.appendChild(b);
+    });
+    box.appendChild(row);
   }
 
   function paintOffer() {
@@ -425,6 +492,7 @@
     }
 
     els.list.appendChild(li);
+    if (els.suggest && els.suggest.parentNode) els.suggest.parentNode.removeChild(els.suggest);
     if (m.sender === 'visitor') paintSeen();
     if (m.sender !== 'visitor' && !isOpen && m.sender !== 'system') {
       unread++;

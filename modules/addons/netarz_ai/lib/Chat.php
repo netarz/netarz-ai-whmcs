@@ -249,7 +249,55 @@ class Chat
             'offer_ticket' => $offerTicket,
             'ticket_id' => $thread->ticket_id !== null ? (int) $thread->ticket_id : null,
             'seen_by_admin' => (int) $thread->last_seen_by_admin,
+            'rating' => isset($thread->rating) && $thread->rating !== null ? (int) $thread->rating : null,
+            'can_rate' => self::canRate($thread),
         ];
+    }
+
+    /** The rating question appears once someone (the AI or a person) has answered, and only until it is answered. */
+    public static function canRate(object $thread): bool
+    {
+        if (! Settings::bool('chat_rating') || (isset($thread->rating) && $thread->rating !== null)) {
+            return false;
+        }
+
+        return Capsule::table(self::MESSAGES)->where('thread_id', $thread->id)->whereIn('sender', ['ai', 'admin'])->exists();
+    }
+
+    /**
+     * The visitor's verdict on the conversation: 1 helpful, -1 not helpful.
+     * Rated once; a second rating is refused so the dashboard counts people, not clicks.
+     */
+    public static function rate(object $thread, int $rating): bool
+    {
+        if (! in_array($rating, [1, -1], true) || ! self::canRate($thread)) {
+            return false;
+        }
+
+        $updated = Capsule::table(self::THREADS)->where('id', $thread->id)->whereNull('rating')
+            ->update(['rating' => $rating, 'rated_at' => Clock::now()]);
+        if ($updated && $rating === -1) {
+            self::addMessage((int) $thread->id, 'system', Lang::get('chat_rated_down', [], self::langOf($thread)));
+            Capsule::table(self::THREADS)->where('id', $thread->id)->increment('unread_admin');
+        }
+
+        return (bool) $updated;
+    }
+
+    /** @return array{up:int, down:int, rated:int, total:int, percent:int|null} ratings of conversations started since $since */
+    public static function satisfaction(string $since): array
+    {
+        try {
+            $base = Capsule::table(self::THREADS)->where('created_at', '>=', $since);
+            $total = (clone $base)->count();
+            $up = (clone $base)->where('rating', 1)->count();
+            $down = (clone $base)->where('rating', -1)->count();
+        } catch (\Throwable $e) {
+            $total = $up = $down = 0;
+        }
+        $rated = $up + $down;
+
+        return ['up' => $up, 'down' => $down, 'rated' => $rated, 'total' => $total, 'percent' => $rated > 0 ? (int) round($up / $rated * 100) : null];
     }
 
     /**
@@ -354,6 +402,7 @@ class Chat
                 'time' => (string) $t->last_message_at,
                 'page' => (string) $t->page_url,
                 'ticket_id' => $t->ticket_id !== null ? (int) $t->ticket_id : null,
+                'rating' => isset($t->rating) && $t->rating !== null ? (int) $t->rating : null,
             ];
         }
 
