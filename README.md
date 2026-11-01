@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/promo/hero.png" alt="Gisoo AI for WHMCS: AI live chat and ticket replies that know your products and stock" width="100%">
+
 # افزونهٔ هوش مصنوعی WHMCS گیسو (Gisoo AI for WHMCS)
 
 **دستیار پشتیبانی و فروش هوش مصنوعی برای WHMCS: چت با مشتری در ناحیهٔ کاربری، پیش‌نویس یا پاسخ تیکت، و سپردن کار به همکاران شما.**
@@ -15,6 +17,8 @@ AI live chat and AI ticket replies for WHMCS, powered by the Gisoo AI API (GPT, 
 [صفحهٔ معرفی افزونه](https://gisoo.pro/whmcs?utm_source=github&utm_medium=referral&utm_campaign=gisoo-ai-whmcs&utm_content=header) · [راهنمای نصب](https://gisoo.pro/docs/whmcs?utm_source=github&utm_medium=referral&utm_campaign=gisoo-ai-whmcs&utm_content=header) · [دانلود آخرین نسخه](https://github.com/netarz/netarz-ai-whmcs/releases/latest) · [ساخت کلید API](https://gisoo.pro/app/api?utm_source=github&utm_medium=referral&utm_campaign=gisoo-ai-whmcs&utm_content=header) · [English](#english)
 
 <img src="docs/screenshots/chat-widget-en.png" alt="پنجرهٔ چت هوش مصنوعی در ناحیهٔ کاربری WHMCS" width="49%"> <img src="docs/screenshots/admin-inbox-fa.png" alt="صندوق چت آنلاین در پنل مدیریت WHMCS، فارسی و راست‌به‌چپ" width="49%">
+
+<img src="docs/promo/promo-chat.png" alt="چت هوش مصنوعی که محصولات، قیمت‌ها و حساب مشتری را می‌شناسد" width="32%"> <img src="docs/promo/promo-stock.png" alt="محصول ناموجود در WHMCS پیشنهاد نمی‌شود" width="32%"> <img src="docs/promo/promo-team.png" alt="پیش‌نویس تیکت برای همکاران، تصمیم با شما" width="32%">
 
 </div>
 
